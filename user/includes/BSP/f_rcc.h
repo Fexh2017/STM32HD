@@ -5,7 +5,7 @@
 
 enum RCC_APB_E
 {
-  e_RCC_AFIO = 1,
+  e_RCC_AFIO =1,
   e_RCC_GPIOA  ,
   e_RCC_GPIOB  ,
   e_RCC_GPIOC  ,

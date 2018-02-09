@@ -147,6 +147,35 @@ void SysTick_Handler(void)
 /*  file (startup_stm32f10x_xx.s).                                            */
 /******************************************************************************/
 
+/*******************************************************************************
+* Function Name  : USB_LP_CAN_RX0_IRQHandler
+* Description    : This function handles USB Low Priority or CAN RX0 interrupts
+*                  requests.
+* Input          : None
+* Output         : None
+* Return         : None
+*******************************************************************************/
+#include "usb_istr.h"
+void USB_LP_CAN1_RX0_IRQHandler(void)
+{
+  USB_Istr();
+}
+
+/*******************************************************************************
+* Function Name  : USBWakeUp_IRQHandler
+* Description    : This function handles USB WakeUp interrupt request.
+* Input          : None
+* Output         : None
+* Return         : None 
+*******************************************************************************/
+void USBWakeUp_IRQHandler(void)
+{
+	EXTI->PR|=1<<18;//清除USB唤醒中断挂起位
+}
+
+void USB_HP_CAN_TX_IRQHandler(void)
+{}
+
 /**
   * @brief  This function handles PPP interrupt request.
   * @param  None
