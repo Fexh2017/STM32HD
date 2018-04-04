@@ -3,50 +3,62 @@
 
 #include "p_debug.h"
 #include "p_led.h"
+#include "p_usb.h"
 
-#include "usb_lib.h"
+#include "usb_property.h"
+
+#include "f_gpio.h"
+#include "f_rcc.h"
 
 void sys_init(void)
 {
-	GPIO_InitTypeDef GPIO_InitStructure;
+	systick_init();
+	
 	p_debug_init();
 	SYS_LOG("system init");
-	p_led_init(e_LED_0);
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);	//设置NVIC中断分组2:2位抢占优先级，2位响应优先级
+	p_led_init(e_LED_ALL);
 	
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);	
-	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_15;	
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 
-	GPIO_Init(GPIOC, &GPIO_InitStructure);
-	
-	GPIO_ResetBits(GPIOC,GPIO_Pin_15);
-	delayms(1000);
-	delayms(1000);
-	delayms(1000);
-	GPIO_SetBits(GPIOC,GPIO_Pin_15);
+	f_rcc_enable(e_RCC_GPIOC);
+	f_gpio_init(GPIOC,GPIO_Pin_1,GPIO_Mode_IPU);
+	f_gpio_init(GPIOC,GPIO_Pin_13,GPIO_Mode_IPU);
 	
 	SYS_LOG("USB init");
-	USB_Interrupts_Config();
-	Set_USBClock();
-	USB_Init();
+	
+	p_usb_init();
 }
 
 void sys_mainloop(void)
 {
-	u8 send_buf[4]; //key, x, y, 0
+	static u8 last_key = 0;
+	u8 send_buf[4] = {0,0,0,0}; //key, x, y, 0
+
 	//key[0]:0,左键松开;1,左键按下;
 	//key[1]:0,右键松开;1,右键按下
 	//key[2]:0,中键松开;1,中键按下   
-	send_buf[0] = !send_buf[0];
-	send_buf[1] = 0;
-	send_buf[2] = 0;
-	send_buf[3] = 0;
-	Joystick_Send(send_buf[0],send_buf[1],send_buf[2],0);
+		
+	if(f_gpio_read(GPIOC,GPIO_Pin_1) == 0)
+	{
+		p_led_on(e_LED_0);
+		send_buf[0] |= 0x01;
+	}else
+	{
+		p_led_off(e_LED_0);
+	}
+	if(f_gpio_read(GPIOC,GPIO_Pin_13) == 0)
+	{
+		p_led_on(e_LED_1);
+		send_buf[0] |= 0x02;
+	}else
+	{
+		p_led_off(e_LED_1);
+	}
 	
-	p_led_toggle(e_LED_0);
+	if(last_key != send_buf[0] || send_buf[1] != 0 || send_buf[2] != 0)
+	{
+		last_key = send_buf[0];
+		Usb_hid_property.send_event(send_buf, 4);
+	}
 	
-	delayms(500);
 }
 
 int main(void)

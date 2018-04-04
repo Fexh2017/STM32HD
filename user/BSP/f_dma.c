@@ -49,9 +49,8 @@ TIM		TIM5	|TIM5_CH4	|TIM5_CH3	|			|TIM5_CH2	|TIM5_CH1	|
 				|			|TIM8_COM	|			|			|			|
 ----------------+-----------+-----------+-----------+-----------+-----------+
 */
-static void (*dma_irq[12])(void) = {0,0,0,0,0,0,0,0,0,0,0,0};
 
-void f_dma_init(u32 from,u32 to,u32 size,DMA_Channel_TypeDef* channel)
+void f_dma_init(u32 peripheral, u32 memory, u32 len, DMA_Channel_TypeDef* channel, u32 dir, u32 mode)
 {
 	DMA_InitTypeDef DMA_InitStructure;
 	
@@ -75,146 +74,18 @@ void f_dma_init(u32 from,u32 to,u32 size,DMA_Channel_TypeDef* channel)
 			break;
 	}
 	
-	DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)from;
-	DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t)to;
-	DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralSRC;
-	DMA_InitStructure.DMA_BufferSize = size;
+	DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t)peripheral;
+	DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t)memory;
+	DMA_InitStructure.DMA_DIR = dir;
+	DMA_InitStructure.DMA_BufferSize = len;
 	DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
 	DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
 	DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
 	DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;
-	DMA_InitStructure.DMA_Mode = DMA_Mode_Circular;
+	DMA_InitStructure.DMA_Mode = mode;
 	DMA_InitStructure.DMA_Priority = DMA_Priority_VeryHigh;
 	DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;
 	DMA_Init(channel, &DMA_InitStructure);  
-	DMA_Cmd(channel, ENABLE);
-
 }
 
-
-void f_dma_it_config(DMA_Channel_TypeDef* DMA_Channel, int IRQPriority, void (*fun)(void))
-{
-	NVIC_InitTypeDef NVIC_InitStructure; 
-	
-    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0); 
-	
-	switch((u32)DMA_Channel)
-	{
-		case (u32)DMA1_Channel1:
-			NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel1_IRQn;
-			dma_irq[0] = fun;
-			break;
-		case (u32)DMA1_Channel2:
-			NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel2_IRQn;
-			dma_irq[1] = fun;
-			break;
-		case (u32)DMA1_Channel3:
-			NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel3_IRQn;
-			dma_irq[2] = fun;
-			break;
-		case (u32)DMA1_Channel4:
-			NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel4_IRQn;
-			dma_irq[3] = fun;
-			break;
-		case (u32)DMA1_Channel5:
-			NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel5_IRQn;
-			dma_irq[4] = fun;
-			break;
-		case (u32)DMA1_Channel6:
-			NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel6_IRQn;
-			dma_irq[5] = fun;
-			break;
-		case (u32)DMA1_Channel7:
-			NVIC_InitStructure.NVIC_IRQChannel = DMA1_Channel7_IRQn;
-			dma_irq[6] = fun;
-			break;
-		case (u32)DMA2_Channel1:
-			NVIC_InitStructure.NVIC_IRQChannel = DMA2_Channel1_IRQn;
-			dma_irq[7] = fun;
-			break;
-		case (u32)DMA2_Channel2:
-			NVIC_InitStructure.NVIC_IRQChannel = DMA2_Channel2_IRQn;
-			dma_irq[8] = fun;
-			break;
-		case (u32)DMA2_Channel3:
-			NVIC_InitStructure.NVIC_IRQChannel = DMA2_Channel3_IRQn;
-			dma_irq[9] = fun;
-			break;
-		case (u32)DMA2_Channel4:
-			NVIC_InitStructure.NVIC_IRQChannel = DMA2_Channel4_5_IRQn;
-			dma_irq[10] = fun;
-			break;
-		case (u32)DMA2_Channel5:
-			NVIC_InitStructure.NVIC_IRQChannel = DMA2_Channel4_5_IRQn;
-			dma_irq[11] = fun;
-			break;
-	}
-	
-	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority = IRQPriority;	
-    NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-    NVIC_Init(&NVIC_InitStructure);
-	
-	DMA_ITConfig(DMA_Channel, DMA_IT_HT|DMA_IT_TC, ENABLE);
-}
-
-/*DMA Interrupt Handler*/
-void DMA1_Channel1_IRQHandler()
-{
-	(*dma_irq[0])();
-	DMA_ClearITPendingBit(DMA1_IT_HT1|DMA1_IT_TC1);
-}
-void DMA1_Channel2_IRQHandler()
-{
-	(*dma_irq[1])();
-	DMA_ClearITPendingBit(DMA1_IT_HT2|DMA1_IT_TC2);
-}
-void DMA1_Channel3_IRQHandler()
-{
-	(*dma_irq[2])();
-	DMA_ClearITPendingBit(DMA1_IT_HT3|DMA1_IT_TC3);
-}
-void DMA1_Channel4_IRQHandler()
-{
-	(*dma_irq[3])();
-	DMA_ClearITPendingBit(DMA1_IT_HT4|DMA1_IT_TC4);
-}
-void DMA1_Channel5_IRQHandler()
-{
-	(*dma_irq[4])();
-	DMA_ClearITPendingBit(DMA1_IT_HT5|DMA1_IT_TC5);
-}
-void DMA1_Channel6_IRQHandler()
-{
-	(*dma_irq[5])();
-	DMA_ClearITPendingBit(DMA1_IT_HT6|DMA1_IT_TC6);
-}
-void DMA1_Channel7_IRQHandler()
-{
-	(*dma_irq[6])();
-	DMA_ClearITPendingBit(DMA1_IT_HT7|DMA1_IT_TC7);
-}
-void DMA2_Channel1_IRQHandler()
-{
-	(*dma_irq[7])();
-	DMA_ClearITPendingBit(DMA2_IT_HT1|DMA2_IT_TC1);
-}
-void DMA2_Channel2_IRQHandler()
-{
-	(*dma_irq[8])();
-	DMA_ClearITPendingBit(DMA2_IT_HT2|DMA2_IT_TC2);
-}
-void DMA2_Channel3_IRQHandler()
-{
-	(*dma_irq[9])();
-	DMA_ClearITPendingBit(DMA2_IT_HT3|DMA2_IT_TC3);
-}
-void DMA2_Channel4_5_IRQHandler()
-{
-	if(dma_irq[10])
-	DMA_ClearITPendingBit(DMA2_IT_HT4|DMA2_IT_TC4|DMA2_IT_HT5|DMA2_IT_TC5);
-		(*dma_irq[10])();
-	if(dma_irq[11])
-		(*dma_irq[11])();
-}
 
