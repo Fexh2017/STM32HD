@@ -6,6 +6,8 @@
 
 #if (USB_PROP == USB_PROP_JOYSTICK)
 
+#include "usb_hid.h"
+
 #define CONFIG_USB_CLASS_HID	1
 
 //#define USB_IMR_MSK (USB_CNTR_CTRM | USB_CNTR_WKUPM | USB_CNTR_SUSPM | USB_CNTR_ERRM  | USB_CNTR_SOFM | USB_CNTR_ESOFM | USB_CNTR_RESETM )
@@ -24,19 +26,6 @@
 #define USB_SUSPEND_ENABLE		TRUE
 
 #define USB_HID_DESCRIPTOR_NUM 	1
-#define USB_HID_REPORT_LEN		Usb_hid_report_len
-
-#pragma pack(1)
-typedef struct _USB_HID_DESCRIPTOR{
-	u8  bLength;
-	u8  bDescripterType;
-	u16 bcdHID;
-	u8  bCountyCode;
-	u8  bNumDescriptors;
-	u8  bDescriptorType;
-	u16 wDescriptorLength;
-}USB_HID_DESCRIPTOR;
-#pragma pack()
 
 #pragma pack(1)
 typedef struct _USB_CONFIGURATION{
@@ -47,9 +36,6 @@ typedef struct _USB_CONFIGURATION{
 }USB_CONFIGURATION;
 #pragma pack()
 
-extern const u8 Usb_hid_report_descriptor[];
-extern const u32 Usb_hid_report_len;
-extern const USB_HID_PROPERTY Usb_hid_property;
 #endif
 
 #endif //__USB_JOYSTICK_H__

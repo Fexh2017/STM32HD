@@ -124,89 +124,35 @@ const USB_HID_PROPERTY Usb_hid_property = {
 
 
 const u8 Usb_hid_report_descriptor[] = {
-    0x05,          /*Usage Page(Generic Desktop)*/
-    0x01,
-    0x09,          /*Usage(Mouse)*/
-    0x02,
-    0xA1,          /*Collection(Logical)*/
-    0x01,
-    0x09,          /*Usage(Pointer)*/
-    0x01,
-    /* 8 */
-    0xA1,          /*Collection(Linked)*/
-    0x00,
-    0x05,          /*Usage Page(Buttons)*/
-    0x09,
-    0x19,          /*Usage Minimum(1)*/
-    0x01,
-    0x29,          /*Usage Maximum(3)*/
-    0x03,
-    /* 16 */
-    0x15,          /*Logical Minimum(0)*/
-    0x00,
-    0x25,          /*Logical Maximum(1)*/
-    0x01,
-    0x95,          /*Report Count(3)*/
-    0x03,
-    0x75,          /*Report Size(1)*/
-    0x01,
-    /* 24 */
-    0x81,          /*Input(Variable)*/
-    0x02,
-    0x95,          /*Report Count(1)*/
-    0x01,
-    0x75,          /*Report Size(5)*/
-    0x05,
-    0x81,          /*Input(Constant,Array)*/
-    0x01,
-    /* 32 */
-    0x05,          /*Usage Page(Generic Desktop)*/
-    0x01,
-    0x09,          /*Usage(X axis)*/
-    0x30,
-    0x09,          /*Usage(Y axis)*/
-    0x31,
-    0x09,          /*Usage(Wheel)*/
-    0x38,
-    /* 40 */
-    0x15,          /*Logical Minimum(-127)*/
-    0x81,
-    0x25,          /*Logical Maximum(127)*/
-    0x7F,
-    0x75,          /*Report Size(8)*/
-    0x08,
-    0x95,          /*Report Count(3)*/
-    0x03,
-    /* 48 */
-    0x81,          /*Input(Variable, Relative)*/
-    0x06,
-    0xC0,          /*End Collection*/
-    0x09,
-    0x3c,
-    0x05,
-    0xff,
-    0x09,
-    /* 56 */
-    0x01,
-    0x15,
-    0x00,
-    0x25,
-    0x01,
-    0x75,
-    0x01,
-    0x95,
-    /* 64 */
-    0x02,
-    0xb1,
-    0x22,
-    0x75,
-    0x06,
-    0x95,
-    0x01,
-    0xb1,
-    /* 72 */
-    0x01,
-    0xc0									
+USB_HID_REPORT_USAGE_PAGE(e_USB_HID_UP_GENERIC_DESKTOP)
+USB_HID_REPORT_USAGE(e_USB_HID_USAGE_MOUSE)
+USB_HID_REPORT_COLLECTION(e_USB_HID_COL_APPLICATION)
+	USB_HID_REPORT_USAGE(e_USB_HID_USAGE_POINTER)
+	USB_HID_REPORT_COLLECTION(e_USB_HID_COL_PHYSICAL)
+		USB_HID_REPORT_USAGE_PAGE(e_USB_HID_UP_BUTTON)
+		USB_HID_REPORT_USAGE_MIN(1)
+		USB_HID_REPORT_USAGE_MAX(3)
+		USB_HID_REPORT_LOGICAL_MIN(0)
+		USB_HID_REPORT_LOGICAL_MAX(1)
+		USB_HID_REPORT_REPORT_SIZE(1)
+		USB_HID_REPORT_REPORT_CNT(3)
+		USB_HID_REPORT_INPUT(e_USB_HID_VAL_DATA | e_USB_HID_VAL_VAR | e_USB_HID_VAL_ABS)
+		
+		USB_HID_REPORT_REPORT_SIZE(5)
+		USB_HID_REPORT_REPORT_CNT(1)
+		USB_HID_REPORT_INPUT(e_USB_HID_VAL_CONST | e_USB_HID_VAL_ARRAY | e_USB_HID_VAL_ABS)
+		
+		USB_HID_REPORT_USAGE_PAGE(e_USB_HID_UP_GENERIC_DESKTOP)
+		USB_HID_REPORT_USAGE(e_USB_HID_USAGE_X)
+		USB_HID_REPORT_USAGE(e_USB_HID_USAGE_Y)
+		USB_HID_REPORT_USAGE(e_USB_HID_USAGE_WHEEL)
+		USB_HID_REPORT_LOGICAL_MIN(-127)
+		USB_HID_REPORT_LOGICAL_MAX(127)
+		USB_HID_REPORT_REPORT_SIZE(8)
+		USB_HID_REPORT_REPORT_CNT(3)
+		USB_HID_REPORT_INPUT(e_USB_HID_VAL_DATA | e_USB_HID_VAL_VAR | e_USB_HID_VAL_REL)
+	USB_HID_REPORT_ENDCOLLECTION()
+USB_HID_REPORT_ENDCOLLECTION()
 };
 
 const u32 Usb_hid_report_len = sizeof(Usb_hid_report_descriptor);

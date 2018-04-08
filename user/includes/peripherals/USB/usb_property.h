@@ -19,11 +19,6 @@ typedef struct _USB_PROPERTY{
 	u8 (*set_configuration)(u16 val);
 }USB_PROPERTY;
 
-typedef struct _USB_HID_PROPERTY{
-	void (*set_idle)(u16 interface, u16 value);
-	void (*send_event)(u8* buf,u32 len);
-}USB_HID_PROPERTY;
-
 #pragma pack(1)
 typedef struct _USB_DEVICE_DESCRIPTOR{
 	u8  bLength;
