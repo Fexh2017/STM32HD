@@ -117,12 +117,6 @@ const USB_HID_PROPERTY Usb_hid_property = {
 };
 
 
-
-
-
-
-
-
 const u8 Usb_hid_report_descriptor[] = {
 USB_HID_REPORT_USAGE_PAGE(e_USB_HID_UP_GENERIC_DESKTOP)
 USB_HID_REPORT_USAGE(e_USB_HID_USAGE_MOUSE)

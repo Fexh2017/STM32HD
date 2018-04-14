@@ -46,10 +46,13 @@ void delayms(u32 tim)
 void delay(u16 tim)
 {
 	u32 i;
-	while(tim--)
+	if(tim)
 	{
-		i=7200;
-		while(i--);
+		while(tim--)
+		{
+			i=720;
+			while(i--);
+		}
 	}
 }
 

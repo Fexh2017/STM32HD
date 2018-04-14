@@ -5,6 +5,8 @@
 #include "p_led.h"
 #include "p_usb.h"
 
+#include "p_spi.h"
+
 #include "usb_property.h"
 
 #include "f_gpio.h"
@@ -18,13 +20,16 @@ void sys_init(void)
 	SYS_LOG("system init");
 	p_led_init(e_LED_ALL);
 	
+	extern void mouse_init(void);
+	mouse_init();
+	
 	f_rcc_enable(e_RCC_GPIOC);
 	f_gpio_init(GPIOC,GPIO_Pin_1,GPIO_Mode_IPU);
 	f_gpio_init(GPIOC,GPIO_Pin_13,GPIO_Mode_IPU);
 	
-	SYS_LOG("USB init");
+	//SYS_LOG("USB init");
 	
-	p_usb_init();
+	//p_usb_init();
 }
 
 void sys_mainloop(void)
@@ -41,11 +46,17 @@ void sys_mainloop(void)
 	//key[0]:0,左键松开;1,左键按下;
 	//key[1]:0,右键松开;1,右键按下
 	//key[2]:0,中键松开;1,中键按下   
-		
+	//extern void mouse_state();
+	//mouse_state();
+	
 	if(f_gpio_read(GPIOC,GPIO_Pin_1) == 0)
 	{
 		p_led_on(e_LED_0);
 		send_buf.keys |= 0x01;
+		
+
+		
+		
 //		send_buf[0] |= 0x01;
 	}else
 	{
@@ -69,6 +80,8 @@ void sys_mainloop(void)
 //		last_key = send_buf[0];
 //		Usb_hid_property.send_event(send_buf, 4);
 	}
+	
+	delayms(2);
 	
 }
 

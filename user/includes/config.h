@@ -34,7 +34,7 @@
 #define DEBUG_UART_BAUDRATE		115200	//串口波特率
 
 #define CONFIG_DEBUG_DMA 		1		//使用DMA发送
-#define CONFIG_DEBUG_TIMESTAMP	0		//使用时间戳
+#define CONFIG_DEBUG_TIMESTAMP	1		//使用时间戳
 
 #define DEBUGN(fmt,...) 	do{printf("%s ",fmt);printf(__VA_ARGS__);}while(0)
 #if CONFIG_DEBUG_TIMESTAMP
@@ -53,17 +53,22 @@
 
 //SYS_DEBUG配置
 #if (CONFIG_DEBUG_UART_EN >= CONFIG_DEBUG_LV_H)
-#define SYS_DBG(...)					DEBUGN("",__VA_ARGS__)
+#define SYS_DBG(...)					DEBUG("",__VA_ARGS__)
+#define SYS_DBGN(...)					DEBUGN("",__VA_ARGS__)
+#define DEV_DBG(...)					DEBUG("",__VA_ARGS__)
+#define DEV_DBGN(...)					DEBUGN("",__VA_ARGS__)
 #else
 #define SYS_DBG(...)  
 #endif
 #if (CONFIG_DEBUG_UART_EN >= CONFIG_DEBUG_LV_M)
 #define SYS_LOG(...)					DEBUG("[SYS]     ",__VA_ARGS__)
+#define DEV_LOG(...)					DEBUG("[DEV]     ",__VA_ARGS__)
 #else
 #define SYS_LOG(...)  
 #endif
 #if (CONFIG_DEBUG_UART_EN >= CONFIG_DEBUG_LV_L)
 #define SYS_ERR(...)					DEBUG("[SYS_ERR] ",__VA_ARGS__)
+#define DEV_ERR(...)					DEBUG("[DEV_ERR] ",__VA_ARGS__)
 #else
 #define SYS_ERR(...)  
 #endif

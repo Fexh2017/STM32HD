@@ -10,12 +10,13 @@
       <TargetName>Target 1</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060422::V5.06 update 4 (build 422)::ARMCC</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
+      <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32F103RC</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32F1xx_DFP.2.1.0</PackID>
+          <PackID>Keil.STM32F1xx_DFP.2.2.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IRAM(0x20000000,0xC000) IROM(0x08000000,0x40000) CPUTYPE("Cortex-M3") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -51,7 +52,7 @@
           <OutputName>STM32</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
-          <CreateHexFile>0</CreateHexFile>
+          <CreateHexFile>1</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
           <ListingPath>.\</ListingPath>
@@ -323,6 +324,7 @@
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>1</uC99>
+            <uGnu>0</uGnu>
             <useXO>0</useXO>
             <v6Lang>0</v6Lang>
             <v6LangP>0</v6LangP>
@@ -335,7 +337,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>.\Libraries\STM32F10x_StdPeriph_Driver\inc;.\Libraries\CMSIS\CM3;.\Libraries\CMSIS\CM3\CoreSupport;.\Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x;.\user;.\user\includes;.\user\includes\BSP;.\user\includes\peripherals;.\user\includes\peripherals\USB\USB_CORE;.\user\includes\peripherals\USB\USB_CONFIG;.\user\includes\peripherals\USB</IncludePath>
+              <IncludePath>.\Libraries\STM32F10x_StdPeriph_Driver\inc;.\Libraries\CMSIS\CM3;.\Libraries\CMSIS\CM3\CoreSupport;.\Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x;.\user;.\user\includes;.\user\includes\BSP;.\user\includes\peripherals;.\user\includes\peripherals\USB;.\user\includes\devices</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -549,6 +551,11 @@
               <FileType>1</FileType>
               <FilePath>.\user\peripherals\p_usb.c</FilePath>
             </File>
+            <File>
+              <FileName>p_spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\user\peripherals\p_spi.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -565,11 +572,6 @@
               <FilePath>.\user\BSP\f_gpio.c</FilePath>
             </File>
             <File>
-              <FileName>f_usart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\user\BSP\f_usart.c</FilePath>
-            </File>
-            <File>
               <FileName>f_timer.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\user\BSP\f_timer.c</FilePath>
@@ -578,6 +580,11 @@
               <FileName>f_dma.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\user\BSP\f_dma.c</FilePath>
+            </File>
+            <File>
+              <FileName>f_usart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\user\BSP\f_usart.c</FilePath>
             </File>
             <File>
               <FileName>f_adc.c</FileName>
@@ -611,8 +618,24 @@
             </File>
           </Files>
         </Group>
+        <Group>
+          <GroupName>devices</GroupName>
+          <Files>
+            <File>
+              <FileName>mouse.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\user\devices\mouse.c</FilePath>
+            </File>
+          </Files>
+        </Group>
       </Groups>
     </Target>
   </Targets>
+
+  <RTE>
+    <apis/>
+    <components/>
+    <files/>
+  </RTE>
 
 </Project>
