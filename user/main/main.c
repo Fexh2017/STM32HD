@@ -20,8 +20,8 @@ void sys_init(void)
 	SYS_LOG("system init");
 	p_led_init(e_LED_ALL);
 	
-//	extern void mouse_init(void);
-//	mouse_init();
+	extern void mouse_init(void);
+	mouse_init();
 	
 	f_rcc_enable(e_RCC_GPIOC);
 	f_gpio_init(GPIOC,GPIO_Pin_1,GPIO_Mode_IPU);
@@ -44,16 +44,20 @@ void sys_mainloop(void)
 		s8 wheel;
 	}send_buf = {0,0,0,0};
 	
-	
+	if(Usb_status.State != E_USB_STATE_CONFIGURED)
+	{
+		delayms(2);
+		return;
+	}
 
 	//key[0]:0,左键松开;1,左键按下;
 	//key[1]:0,右键松开;1,右键按下
 	//key[2]:0,中键松开;1,中键按下   
-//	extern void mouse_state(s16 *x, s16 *y);
-//	mouse_state(&x, &y);
+	extern void mouse_state(s16 *x, s16 *y);
+	mouse_state(&x, &y);
 	
-	send_buf.x = x;
-	send_buf.y = y;
+	send_buf.x = (s8)x;
+	send_buf.y = (s8)-y;
 	
 	if(f_gpio_read(GPIOC,GPIO_Pin_1) == 0)
 	{
@@ -74,7 +78,7 @@ void sys_mainloop(void)
 		p_led_off(e_LED_1);
 	}
 	
-	if(last_key != send_buf.keys || send_buf.x != 0 || send_buf.y != 0)
+	if(last_key != send_buf.keys || send_buf.x != 0 || send_buf.y != 0 || last_key == 0)
 //	if(last_key != send_buf[0] || send_buf[1] != 0 || send_buf[2] != 0)
 	{
 		last_key = send_buf.keys;
@@ -83,7 +87,7 @@ void sys_mainloop(void)
 //		Usb_hid_property.send_event(send_buf, 4);
 	}
 	
-	delayms(2);
+	//delayms(2);
 	
 }
 
