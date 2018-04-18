@@ -45,14 +45,9 @@ void delayms(u32 tim)
 //软件延时
 void delay(u16 tim)
 {
-	u32 i;
 	if(tim)
 	{
-		while(tim--)
-		{
-			i=720;
-			while(i--);
-		}
+		while(tim--);
 	}
 }
 
