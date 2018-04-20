@@ -21,7 +21,7 @@
 
 /*π¶ƒ‹≈‰÷√==================================================================*/
 #define CONFIG_DEBUG_UART_EN 			CONFIG_DEBUG_LV_H				//DEBUG¥Æø⁄
-#define CONFIG_LED_EN					1								//LEDµ∆
+#define CONFIG_LED_EN					0								//LEDµ∆
 #define CONFIG_USB_EN					1								//USB
 #define CONFIG_MOUSE_EN					1								//MOUSE
 
@@ -70,12 +70,6 @@
 #else
 #define SYS_ERR(...)  
 #endif
-
-
-
-
-/*USB≈‰÷√===================================================================*/
-
 
 
 /*÷–∂œ≈‰÷√==================================================================*/

@@ -335,7 +335,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>.\Libraries\STM32F10x_StdPeriph_Driver\inc;.\Libraries\CMSIS\CM3;.\Libraries\CMSIS\CM3\CoreSupport;.\Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x;.\user;.\user\includes;.\user\includes\BSP;.\user\includes\peripherals;.\user\includes\peripherals\USB;.\user\includes\devices</IncludePath>
+              <IncludePath>.\Libraries\STM32F10x_StdPeriph_Driver\inc;.\Libraries\CMSIS\CM3;.\Libraries\CMSIS\CM3\CoreSupport;.\Libraries\CMSIS\CM3\DeviceSupport\ST\STM32F10x;.\user;.\user\includes;.\user\includes\BSP;.\user\includes\devices;.\user\includes\devices\USB</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -537,16 +537,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>peripherals</GroupName>
-          <Files>
-            <File>
-              <FileName>p_spi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\user\peripherals\p_spi.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>BSP</GroupName>
           <Files>
             <File>
@@ -594,6 +584,11 @@
               <FileType>1</FileType>
               <FilePath>.\user\BSP\f_usb.c</FilePath>
             </File>
+            <File>
+              <FileName>f_spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\user\BSP\f_spi.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -602,7 +597,7 @@
             <File>
               <FileName>usb_Joystick.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\user\peripherals\USB\usb_Joystick.c</FilePath>
+              <FilePath>.\user\devices\USB\usb_Joystick.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -632,7 +627,7 @@
             <File>
               <FileName>usb.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\user\devices\usb.c</FilePath>
+              <FilePath>.\user\devices\USB\usb.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -1,8 +1,7 @@
+#include "config.h"
 #include "usb_property.h"
 #include "f_usb.h"
 #include "usb.h"
-#include "config.h"
-
 
 //USB_DEBUGÅäÖÃ
 #if (CONFIG_USB_DEBUG_EN >= CONFIG_DEBUG_LV_H)

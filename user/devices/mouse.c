@@ -1,11 +1,13 @@
 #include "config.h"
 #include "mouse.h"
 
+#if CONFIG_MOUSE_EN
+
 #include "public.h"
 #include "f_rcc.h"
 #include "f_gpio.h"
 #include "f_timer.h"
-#include "p_spi.h"
+#include "f_spi.h"
 
 
 
@@ -32,7 +34,7 @@
 
 
 /*  µ¼º½Ä£¿é  */
-#define MOUSE_NAVI_CEN		GPIO_PA_03
+#define MOUSE_NAVI_CSN		GPIO_PA_03
 #define MOUSE_NAVI_MOTION	GPIO_PA_04
 u8 mouse_navi_init_buf[] = 
 {
@@ -48,21 +50,21 @@ u8 mouse_navi_init_buf[] =
 
 void mouse_navi_writereg(u8 addr, u8 data)
 {
-	Spi_dev.cs(MOUSE_NAVI_CEN, 1);
+	f_spi_cs(MOUSE_NAVI_CSN, 1);
 	delay(10);
-	Spi_dev.send(addr | 0x80, data);
+	f_spi_send(addr | 0x80, data);
 	delay(10);
-	Spi_dev.cs(MOUSE_NAVI_CEN, 0);
+	f_spi_cs(MOUSE_NAVI_CSN, 0);
 }
 
 u8 mouse_navi_readreg(u8 addr)
 {
 	u8 data;
-	Spi_dev.cs(MOUSE_NAVI_CEN, 1);
+	f_spi_cs(MOUSE_NAVI_CSN, 1);
 	delay(10);
-	data = Spi_dev.read(addr);
+	data = f_spi_read(addr);
 	delay(10);
-	Spi_dev.cs(MOUSE_NAVI_CEN, 0);
+	f_spi_cs(MOUSE_NAVI_CSN, 0);
 	delay(10);
 	return data;
 }
@@ -70,17 +72,11 @@ u8 mouse_navi_readreg(u8 addr)
 u32 mouse_navi_readregbuf(u8 addr, u8* buf, u32 len)
 {
 	int i;
-	Spi_dev.cs(MOUSE_NAVI_CEN, 1);
+	f_spi_cs(MOUSE_NAVI_CSN, 1);
 	delay(10);
-	Spi_dev.rw(addr);
+	f_spi_readbuf(addr, buf, len);
 	delay(10);
-	for(i = 0; i <len; i++)
-	{
-		buf[i] = Spi_dev.rw(0);
-		//buf[i] = mouse_read(addr + i);
-	}
-	delay(10);
-	Spi_dev.cs(MOUSE_NAVI_CEN, 0);
+	f_spi_cs(MOUSE_NAVI_CSN, 0);
 	return i;
 }
 
@@ -102,17 +98,17 @@ u8 mouse_navi_check(void)
 u8 mouse_navi_init(void)
 {
 	u8 buf[4];
-	Spi_dev.init();
-	f_gpio_init(MOUSE_NAVI_CEN, GPIO_Mode_Out_PP);
+	f_spi_init(MOUSE_NAVI_CSN);
+	f_gpio_init(MOUSE_NAVI_CSN, GPIO_Mode_Out_PP);
 	f_gpio_init(MOUSE_NAVI_MOTION, GPIO_Mode_IPU);
-	Spi_dev.cs(MOUSE_NAVI_CEN, 0);
-	delayms(100);
-	Spi_dev.cs(MOUSE_NAVI_CEN, 1);
-	delayms(100);
-	Spi_dev.cs(MOUSE_NAVI_CEN, 0);
-	delayms(100);
-	Spi_dev.cs(MOUSE_NAVI_CEN, 1);
-	delayms(100);
+	f_spi_cs(MOUSE_NAVI_CSN, 0);
+	delayms(10);
+	f_spi_cs(MOUSE_NAVI_CSN, 1);
+	delayms(10);
+	f_spi_cs(MOUSE_NAVI_CSN, 0);
+	delayms(10);
+	f_spi_cs(MOUSE_NAVI_CSN, 1);
+	delayms(10);
 	
 	if(mouse_navi_check() == 0)
 	{
@@ -307,6 +303,12 @@ u8 mouse_write(u32 addr, void *data)
 {
 	return 0;
 }
+#else
+u8 mouse_init(void){return 0xFF;}
+u8 mouse_read(u32 addr, void *data){return 0xFF;}
+u8 mouse_write(u32 addr, void *data){return 0xFF;}
+#endif
+
 
 const DEVICE Mouse = 
 {
