@@ -7,6 +7,7 @@
 void f_usart_init(u8 id, u32 baudrate)
 {
 	USART_InitTypeDef USART_InitStructure;
+	GPIO_InitTypeDef GPIO_InitStructure;
 	
 	switch(id)
 	{
@@ -15,8 +16,19 @@ void f_usart_init(u8 id, u32 baudrate)
 			f_rcc_enable(e_RCC_GPIOA);
 			f_rcc_enable(e_RCC_AFIO);
 		
-			f_gpio_init(GPIOA,GPIO_Pin_9,GPIO_Mode_AF_PP);
-			f_gpio_init(GPIOA,GPIO_Pin_10,GPIO_Mode_IN_FLOATING);
+//			f_gpio_init(GPIO_PA_09,GPIO_Mode_AF_PP);
+//			f_gpio_init(GPIO_PA_10,GPIO_Mode_IN_FLOATING);
+		
+
+					 
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;	
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
+	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;	
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz; 
+	GPIO_Init(GPIOA, &GPIO_InitStructure);
 		
 			USART_InitStructure.USART_BaudRate = baudrate;
 			USART_InitStructure.USART_WordLength = USART_WordLength_8b;

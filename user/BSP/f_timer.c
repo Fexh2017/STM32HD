@@ -38,9 +38,9 @@ void f_timer_init(TIM_TypeDef* tim,u16 TIM_Period,u16 TIM_Prescaler)
 	}
 	
 	
-    TIM_TimeBaseStructure.TIM_Period = TIM_Period;       					//定时周期 20  
+    TIM_TimeBaseStructure.TIM_Period = TIM_Period;       			//定时周期
     TIM_TimeBaseStructure.TIM_Prescaler = TIM_Prescaler;       		//预分频，不分频 72M / (0+1) = 72M
-    TIM_TimeBaseStructure.TIM_ClockDivision = 0;    						//时钟分频系数
+    TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;    		//时钟分频系数
     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  	//向上计数模式
 	TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;
     TIM_TimeBaseInit(tim, &TIM_TimeBaseStructure);

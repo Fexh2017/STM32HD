@@ -473,11 +473,11 @@ void p_usb_init(void)
 {
 #if CONFIG_USB_PWR_EN
 	f_rcc_enable(CONFIG_USB_PWR_CLK);
-	f_gpio_init(CONFIG_USB_PWR_PORT,CONFIG_USB_PWR_PIN,GPIO_Mode_Out_PP);
+	f_gpio_init(CONFIG_USB_PWR_PIN,GPIO_Mode_Out_PP);
 	
-	f_gpio_reset(CONFIG_USB_PWR_PORT,CONFIG_USB_PWR_PIN);
+	f_gpio_reset(CONFIG_USB_PWR_PIN);
 	delayms(200);
-	f_gpio_set(CONFIG_USB_PWR_PORT,CONFIG_USB_PWR_PIN);
+	f_gpio_set(CONFIG_USB_PWR_PIN);
 #endif
 	
 	f_nvic_config(USB_LP_CAN1_RX0_IRQn, CONFIG_NVIC_USB_LP);
@@ -490,6 +490,11 @@ void p_usb_init(void)
 	f_usb_SetISTR(0);
 	
 	Usb_property.init();
+	
+	while(Usb_status.State != E_USB_STATE_CONFIGURED)
+	{
+	}
+	delayms(10);
 }
 
 void USB_LP_CAN1_RX0_IRQHandler(void)

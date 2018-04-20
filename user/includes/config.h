@@ -82,12 +82,10 @@
 #if CONFIG_LED_EN
 //LED0
 #define LED_RCC_0						e_RCC_GPIOA
-#define LED_PORT_0 						GPIOA
-#define LED_PIN_0						0x0100
+#define LED_PIN_0						GPIO_PA_08
 //LED1
 #define LED_RCC_1						e_RCC_GPIOD
-#define LED_PORT_1						GPIOD
-#define LED_PIN_1						0x0004
+#define LED_PIN_1						GPIO_PA_02
 #endif //CONFIG_LED_EN
 
 
@@ -120,8 +118,7 @@
 #if CONFIG_USB_PWR_EN
 //USB  πƒ‹Ω≈≈‰÷√
 #define CONFIG_USB_PWR_CLK				e_RCC_GPIOC
-#define CONFIG_USB_PWR_PORT				GPIOC
-#define CONFIG_USB_PWR_PIN				GPIO_Pin_15
+#define CONFIG_USB_PWR_PIN				GPIO_PC_15
 #endif //CONFIG_USB_PWR_EN
 
 #endif //CONFIG_USB_EN

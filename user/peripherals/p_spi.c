@@ -6,9 +6,9 @@
 #include "public.h"
 
 
-#define SPI_MISO GPIO_Pin_6
-#define SPI_MOSI GPIO_Pin_7
-#define SPI_CLK	 GPIO_Pin_5
+#define SPI_MISO GPIO_PA_06
+#define SPI_MOSI GPIO_PA_07
+#define SPI_CLK	 GPIO_PA_05
 
 #define SPI_DELAY 0
 
@@ -20,22 +20,22 @@ void p_spi_init(void)
 		init = 1;
 		f_rcc_enable(e_RCC_GPIOA);
 		
-		f_gpio_init(GPIOA, SPI_MISO, GPIO_Mode_IPU);
-		f_gpio_init(GPIOA, SPI_MOSI, GPIO_Mode_Out_PP);
-		f_gpio_init(GPIOA, SPI_CLK,  GPIO_Mode_Out_PP);
+		f_gpio_init(SPI_MISO, GPIO_Mode_IPU);
+		f_gpio_init(SPI_MOSI, GPIO_Mode_Out_PP);
+		f_gpio_init(SPI_CLK,  GPIO_Mode_Out_PP);
 		
-		f_gpio_set(GPIOA, SPI_CLK);
+		f_gpio_set(SPI_CLK);
 	}
 }
 
-void p_spi_cs(u16 pin, u8 state)
+void p_spi_cs(u32 pin, u8 state)
 {
 	if(state)
 	{
-		f_gpio_reset(GPIOA,pin);
+		f_gpio_reset(pin);
 	}else
 	{
-		f_gpio_set(GPIOA,pin);
+		f_gpio_set(pin);
 	}
 }
 
@@ -45,20 +45,20 @@ u8 p_spi_rw(u8 data)
 	u8 tmp = data;
 	for(i = 0; i < 8; i++)
 	{
-		f_gpio_reset(GPIOA, SPI_CLK);
+		f_gpio_reset(SPI_CLK);
 		delay(SPI_DELAY);
 		if(tmp & 0x80)
 		{
-			f_gpio_set(GPIOA, SPI_MOSI);
+			f_gpio_set(SPI_MOSI);
 		}else
 		{
-			f_gpio_reset(GPIOA, SPI_MOSI);
+			f_gpio_reset(SPI_MOSI);
 		}
 		tmp <<= 1;
 		delay(SPI_DELAY);
-		f_gpio_set(GPIOA, SPI_CLK);
+		f_gpio_set(SPI_CLK);
 		delay(SPI_DELAY);
-		tmp |= (!!f_gpio_read(GPIOA, SPI_MISO));
+		tmp |= (!!f_gpio_read(SPI_MISO));
 		delay(SPI_DELAY);
 	}
 	return tmp;

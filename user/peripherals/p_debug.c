@@ -9,7 +9,7 @@
 
 #if CONFIG_DEBUG_DMA
 
-#define DEBUG_MAX_LEN 	5120
+#define DEBUG_MAX_LEN 	1024
 #define DEBUG_IDLE 		0x00
 #define DEBUG_SEND		0x01
 #define DEBUG_CYCLE		0x02

@@ -7,7 +7,7 @@
 
 typedef struct _SPI_DEV{
 	void 	(*init)(void);
-	void	(*cs)(u16 pin, u8 state);
+	void	(*cs)(u32 pin, u8 state);
 	u8 		(*rw)(u8 data);
 	void	(*send)(u8 addr, u8 data);
 	u8		(*read)(u8 addr);
