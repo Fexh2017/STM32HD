@@ -1,13 +1,35 @@
 #include "config.h"
-
 #include "mouse.h"
-#include "public.h"
 
+#include "public.h"
 #include "f_rcc.h"
 #include "f_gpio.h"
 #include "f_timer.h"
-
 #include "p_spi.h"
+
+
+
+
+#if (MOUSE_DEBUG_EN >= CONFIG_DEBUG_LV_H)
+#define DEV_DBG(...)					DEBUG("[DEV DBG] ",__VA_ARGS__)
+#define DEV_DBGN(...)					DEBUGN("",__VA_ARGS__)
+#else
+#define DEV_DBG(...) 
+#define DEV_DBGN(...) 
+#endif
+#if (MOUSE_DEBUG_EN >= CONFIG_DEBUG_LV_M)
+#define DEV_LOG(...)					DEBUG("[DEV]     ",__VA_ARGS__)
+#else
+#define DEV_LOG(...)  
+#endif
+#if (MOUSE_DEBUG_EN >= CONFIG_DEBUG_LV_L)
+#define DEV_ERR(...)					DEBUG("[DEV_ERR] ",__VA_ARGS__)
+#else
+#define DEV_ERR(...)  
+#endif
+
+
+
 
 /*  µ¼º½Ä£¿é  */
 #define MOUSE_NAVI_CEN		GPIO_PA_03
@@ -70,10 +92,10 @@ u8 mouse_navi_check(void)
 	rev = mouse_navi_readreg(0x01);
 	if(id == 0x31 && rev == 0x03)
 	{
-		DEV_LOG("mouse id %02x %02x", id, rev);
+		DEV_LOG("mouse check id %02x %02x", id, rev);
 		return 0;
 	}
-	DEV_ERR("mouse id err %02x %02x", id, rev);
+	DEV_ERR("mouse check id err %02x %02x", id, rev);
 	return 0xff;
 }
 
@@ -99,7 +121,7 @@ u8 mouse_navi_init(void)
 		delayms(10);
 		
 		mouse_navi_readregbuf(0x42, buf, 4);
-//		
+		
 		mouse_navi_writereg(0x3C, 0x27);
 		mouse_navi_writereg(0x22, 0x0A);
 		mouse_navi_writereg(0x21, 0x01);
@@ -108,14 +130,6 @@ u8 mouse_navi_init(void)
 		mouse_navi_writereg(0x3C, 0x05);
 		mouse_navi_writereg(0x37, 0xB9);
 		delayms(10);
-		
-		//self test
-//		mouse_write(0x10,0x01);
-//		delayms(500);
-//		for(int i = 0x0c; i <= 0x0f; i++)
-//		{
-//			DEV_DBG("%02X %02X", i, mouse_read(i));
-//		}
 
 		for(int i = 0; i < sizeof(mouse_navi_init_buf); i += 2)
 		{
@@ -254,26 +268,28 @@ u8 mouse_init(void)
 	return 0;
 }
 
-u8 mouse_read(MOUSE_DATA *data)
+u8 mouse_read(u32 addr, void *data)
 {
 	s16 x,y;
 	static u8 last_state = 0;
 	u8 state = 0;
+	MOUSE_DATA *d = data;
 	
 	if(mouse_state & E_MOUSE_INIT)
 	{
 		mouse_navi_read(&x, &y);
-		data->x = (s8)x;
-		data->y = (s8)y;
+		d->x = (s8)x;
+		d->y = (s8)y;
 		
-		data->wheel = mouse_wheel_read();
+		d->wheel = mouse_wheel_read();
 		
-		data->keys = mouse_keys_read();
+		d->keys = mouse_keys_read();
 		
-		state = data->keys;
+		state = d->keys;
 		
-		if((state != last_state) || data->x != 0 || data->y != 0 || data->wheel != 0)
+		if((state != last_state) || d->x != 0 || d->y != 0 || d->wheel != 0)
 		{
+			DEV_DBG("mouse %02x %4d %4d %4d", d->keys, d->x, d->y, d->wheel);
 			last_state = state;
 			return 1;
 		}else
@@ -287,10 +303,16 @@ u8 mouse_read(MOUSE_DATA *data)
 	}
 }
 
-const MOUSE_DEV Mouse = 
+u8 mouse_write(u32 addr, void *data)
 {
+	return 0;
+}
+
+const DEVICE Mouse = 
+{
+	.name = "mouse",
 	.init = mouse_init,
 	.read = mouse_read,
-	
+	.write = mouse_write,
 };
 

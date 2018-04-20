@@ -1,4 +1,5 @@
 #include "config.h"
+#include "usb.h"
 
 #if CONFIG_USB_EN
 
@@ -7,9 +8,40 @@
 #include "f_gpio.h"
 #include "f_nvic.h"
 
-#include "p_usb.h"
-
 #include "usb_property.h"
+
+
+//USB_DEBUG配置
+#if (CONFIG_USB_DEBUG_EN >= CONFIG_DEBUG_LV_H)
+#define USB_DBG(...)					DEBUG("[USB DBG] ",__VA_ARGS__)
+#define USB_DBGN(...)					DEBUGN("",__VA_ARGS__)
+#define DEV_DBG(...)					DEBUG("[DEV DBG] ",__VA_ARGS__)
+#define DEV_DBGN(...)					DEBUGN("",__VA_ARGS__)
+#else
+#define USB_DBGN(...)
+#define USB_DBG(...)  
+#define DEV_DBG(...) 
+#define DEV_DBGN(...) 
+#endif
+#if (CONFIG_USB_DEBUG_EN >= CONFIG_DEBUG_LV_M)
+#define USB_LOG(...)					DEBUG("[USB]     ",__VA_ARGS__)
+#define DEV_LOG(...)					DEBUG("[DEV]     ",__VA_ARGS__)
+#else
+#define USB_LOG(...)  
+#define DEV_LOG(...) 
+#endif
+#if (CONFIG_USB_DEBUG_EN >= CONFIG_DEBUG_LV_L)
+#define USB_ERR(...)					DEBUG("[USB_ERR] ",__VA_ARGS__)
+#define DEV_ERR(...)					DEBUG("[DEV_ERR] ",__VA_ARGS__)
+#else
+#define USB_ERR(...)  
+#define DEV_ERR(...) 
+#endif
+
+
+
+
+
 
 
 USB_STATUS 	Usb_status;
@@ -17,12 +49,12 @@ USB_DATA	Usb_data[8];
 USB_REQUEST	Usb_request;
 
 
-void p_usb_setup_stage(u8 ep)
+void usb_setup_stage(u8 ep)
 {
 	f_usb_read((u8*)&Usb_request, f_usb_GetEPRxAddr(ep), sizeof(USB_REQUEST));
 }
 
-void p_usb_in_stage(u8 ep)
+void usb_in_stage(u8 ep)
 {
 	if((Usb_status.Ep_enable & (1 << ep)) && (Usb_data[ep].dir == E_USB_DATA_DIR_TX))
 	{
@@ -43,14 +75,14 @@ void p_usb_in_stage(u8 ep)
 	}
 }
 
-void p_usb_out_stage(u8 ep)
+void usb_out_stage(u8 ep)
 {
 	
 }
 
-void p_usb_setup0(void)
+void usb_setup0(void)
 {
-	p_usb_setup_stage(USB_ENDP0);
+	usb_setup_stage(USB_ENDP0);
 	USB_DBG("SETUP0");
 	USB_DBGN("%02x %02x %04x %04x %04x", Usb_request.bmType, Usb_request.bRequest, Usb_request.wValue, Usb_request.wIndex, Usb_request.wLength);
 	if((Usb_request.bmType & 0x60) == 0)
@@ -67,7 +99,7 @@ void p_usb_setup0(void)
 						Usb_data[USB_ENDP0].buf = (u8*)&Usb_status.Dev_state;
 						Usb_data[USB_ENDP0].len = Usb_request.wLength;
 						Usb_data[USB_ENDP0].offset = 0;
-						p_usb_in_stage(USB_ENDP0);
+						usb_in_stage(USB_ENDP0);
 					}
 				}
 				break;
@@ -88,7 +120,7 @@ void p_usb_setup0(void)
 						Usb_data[USB_ENDP0].buf = NULL;
 						Usb_data[USB_ENDP0].len = 0;
 						Usb_data[USB_ENDP0].offset = 0;
-						p_usb_in_stage(USB_ENDP0);
+						usb_in_stage(USB_ENDP0);
 					}else
 					{
 						Usb_status.DAddr = Usb_request.wValue;
@@ -97,7 +129,7 @@ void p_usb_setup0(void)
 						Usb_data[USB_ENDP0].buf = NULL;
 						Usb_data[USB_ENDP0].len = 0;
 						Usb_data[USB_ENDP0].offset = 0;
-						p_usb_in_stage(USB_ENDP0);
+						usb_in_stage(USB_ENDP0);
 					}
 				}
 				break;
@@ -111,7 +143,7 @@ void p_usb_setup0(void)
 							Usb_data[USB_ENDP0].buf = (u8*)&Usb_device_descriptor;
 							Usb_data[USB_ENDP0].len = Usb_device_descriptor.bLength;
 							Usb_data[USB_ENDP0].offset = 0;
-							p_usb_in_stage(USB_ENDP0);
+							usb_in_stage(USB_ENDP0);
 							break;
 						case E_USB_GD_CONFIGURATION:
 							Usb_data[USB_ENDP0].dir = E_USB_DATA_DIR_TX;
@@ -124,7 +156,7 @@ void p_usb_setup0(void)
 								Usb_data[USB_ENDP0].len = Usb_configuration.configuration.wTotalLength;
 							}
 							Usb_data[USB_ENDP0].offset = 0;
-							p_usb_in_stage(USB_ENDP0);
+							usb_in_stage(USB_ENDP0);
 							break;
 						case E_USB_GD_STRING:
 							switch(Usb_request.wValue & 0x00FF)
@@ -134,28 +166,28 @@ void p_usb_setup0(void)
 									Usb_data[USB_ENDP0].buf = (u8*)&Usb_language;
 									Usb_data[USB_ENDP0].len = Usb_language.bLength;
 									Usb_data[USB_ENDP0].offset = 0;
-									p_usb_in_stage(USB_ENDP0);
+									usb_in_stage(USB_ENDP0);
 									break;
 								case E_USB_STRING_MANUFACTURER:
 									Usb_data[USB_ENDP0].dir = E_USB_DATA_DIR_TX;
 									Usb_data[USB_ENDP0].buf = (u8*)&Usb_string_manufacturer;
 									Usb_data[USB_ENDP0].len = Usb_string_manufacturer.bLength;
 									Usb_data[USB_ENDP0].offset = 0;
-									p_usb_in_stage(USB_ENDP0);
+									usb_in_stage(USB_ENDP0);
 									break;
 								case E_USB_STRING_PRODUCT:
 									Usb_data[USB_ENDP0].dir = E_USB_DATA_DIR_TX;
 									Usb_data[USB_ENDP0].buf = (u8*)&Usb_string_product;
 									Usb_data[USB_ENDP0].len = Usb_string_product.bLength;
 									Usb_data[USB_ENDP0].offset = 0;
-									p_usb_in_stage(USB_ENDP0);
+									usb_in_stage(USB_ENDP0);
 									break;
 								case E_USB_STRING_SERIALNUMBER:
 									Usb_data[USB_ENDP0].dir = E_USB_DATA_DIR_TX;
 									Usb_data[USB_ENDP0].buf = (u8*)&Usb_string_serialnumber;
 									Usb_data[USB_ENDP0].len = Usb_string_serialnumber.bLength;
 									Usb_data[USB_ENDP0].offset = 0;
-									p_usb_in_stage(USB_ENDP0);
+									usb_in_stage(USB_ENDP0);
 									break;
 								default:
 									USB_ERR("UNKNOWN STRING");
@@ -180,7 +212,7 @@ void p_usb_setup0(void)
 							Usb_data[USB_ENDP0].buf = (u8*)Usb_hid_report_descriptor;
 							Usb_data[USB_ENDP0].len = USB_HID_REPORT_LEN;
 							Usb_data[USB_ENDP0].offset = 0;
-							p_usb_in_stage(USB_ENDP0);
+							usb_in_stage(USB_ENDP0);
 							break;
 						default:
 							USB_ERR("UNKNOWN HID DESCRIPTOR");
@@ -208,7 +240,7 @@ void p_usb_setup0(void)
 							Usb_data[USB_ENDP0].buf = NULL;
 							Usb_data[USB_ENDP0].len = 0;
 							Usb_data[USB_ENDP0].offset = 0;
-							p_usb_in_stage(USB_ENDP0);
+							usb_in_stage(USB_ENDP0);
 						}
 						else
 						{
@@ -264,7 +296,7 @@ void p_usb_setup0(void)
 				Usb_data[USB_ENDP0].buf = NULL;
 				Usb_data[USB_ENDP0].len = 0;
 				Usb_data[USB_ENDP0].offset = 0;
-				p_usb_in_stage(USB_ENDP0);
+				usb_in_stage(USB_ENDP0);
 				break;
 			case E_USB_REQ_SET_PROTOCOL:
 				USB_ERR("E_USB_REQ_SET_PROTOCOL");
@@ -278,12 +310,12 @@ void p_usb_setup0(void)
 	}
 }
 
-void p_usb_in0(void)
+void usb_in0(void)
 {
 	//USB_DBG("IN0 %3d/%d", Usb_data[USB_ENDP0].offset, Usb_data[USB_ENDP0].len);
 	if(Usb_data[USB_ENDP0].dir == E_USB_DATA_DIR_TX)
 	{
-		p_usb_in_stage(USB_ENDP0);
+		usb_in_stage(USB_ENDP0);
 	}else if(Usb_data[USB_ENDP0].dir == E_USB_DATA_DIR_IDLE)
 	{
 		if(Usb_request.bRequest == E_USB_REQ_SET_ADDRESS)
@@ -293,12 +325,12 @@ void p_usb_in0(void)
 	}
 }
 
-void p_usb_out0(void)
+void usb_out0(void)
 {
 	//USB_DBG("OUT0 ");
 }
 
-void p_usb_ctr(void)
+void usb_ctr(void)
 {
 	u8  _ep;
 	u16  _val;
@@ -347,7 +379,7 @@ void p_usb_ctr(void)
 	}
 }
 
-void p_usb_istr(void)
+void usb_istr(void)
 {
 	u16 _istr = f_usb_GetISTR();
 	
@@ -435,7 +467,7 @@ void p_usb_istr(void)
 	if(_istr & USB_ISTR_CTR)
 	{
 		//USB_DBG("CTR    ");
-		p_usb_ctr();
+		usb_ctr();
 	}
 #endif
 	
@@ -468,9 +500,42 @@ void p_usb_istr(void)
 #include "usb_lib.h"
 #include "usb_istr.h"
 #endif
-
-void p_usb_init(void)
+void usb_PowerOn(void)
 {
+	f_usb_SetCNTR(USB_CNTR_FRES);
+	f_usb_SetCNTR(0);
+	f_usb_SetISTR(0);
+	f_usb_SetCNTR(USB_CNTR_RESETM | USB_CNTR_SUSPM | USB_CNTR_WKUPM);
+}
+
+void usb_PowerOff(void)
+{
+	f_usb_SetCNTR(USB_CNTR_FRES);
+	f_usb_SetISTR(0);
+	f_usb_SetCNTR(USB_CNTR_FRES | USB_CNTR_PDWN);
+}
+
+void USB_LP_CAN1_RX0_IRQHandler(void)
+{
+	usb_istr();
+}
+
+void USBWakeUp_IRQHandler(void)
+{
+	EXTI->PR|=1<<18; //清除USB唤醒中断挂起位
+}
+
+void USB_HP_CAN_TX_IRQHandler(void)
+{
+}
+
+
+
+
+u8 usb_init(void)
+{
+	DEV_LOG("usb init");
+	
 #if CONFIG_USB_PWR_EN
 	f_rcc_enable(CONFIG_USB_PWR_CLK);
 	f_gpio_init(CONFIG_USB_PWR_PIN,GPIO_Mode_Out_PP);
@@ -486,7 +551,7 @@ void p_usb_init(void)
 	f_rcc_enable(e_RCC_USB);
 	
 	//USB interrupts initialization
-	p_usb_PowerOn();
+	usb_PowerOn();
 	f_usb_SetISTR(0);
 	
 	Usb_property.init();
@@ -495,43 +560,35 @@ void p_usb_init(void)
 	{
 	}
 	delayms(10);
+	return 0;
 }
 
-void USB_LP_CAN1_RX0_IRQHandler(void)
+u8 usb_read(u32 addr, void *data)
 {
-	p_usb_istr();
+	return 0;
 }
 
-void USBWakeUp_IRQHandler(void)
+u8 usb_write(u32 addr, void *data)
 {
-	EXTI->PR|=1<<18; //清除USB唤醒中断挂起位
+	if(addr == 1)
+	{
+		Usb_hid_property.send_event(data, 4);
+	}
+	return 0;
 }
-
-void USB_HP_CAN_TX_IRQHandler(void)
-{
-}
-
-void p_usb_PowerOn(void)
-{
-	f_usb_SetCNTR(USB_CNTR_FRES);
-	f_usb_SetCNTR(0);
-	f_usb_SetISTR(0);
-	f_usb_SetCNTR(USB_CNTR_RESETM | USB_CNTR_SUSPM | USB_CNTR_WKUPM);
-}
-
-void p_usb_PowerOff(void)
-{
-	f_usb_SetCNTR(USB_CNTR_FRES);
-	f_usb_SetISTR(0);
-	f_usb_SetCNTR(USB_CNTR_FRES | USB_CNTR_PDWN);
-}
-
-
-
 
 #else
-void p_usb_init(void){}
-void p_usb_PowerOn(void){}
-void p_usb_PowerOff(void){}
-	
+u8 usb_init(void){return 0xFF;}
+u8 usb_read(u32 addr, void *data){return 0xFF;}
+u8 usb_write(u32 addr, void *data){return 0xFF;}
 #endif
+
+	
+	
+const DEVICE Usb = 
+{
+	.name = "usb",
+	.init = usb_init,
+	.read = usb_read,
+	.write = usb_write,
+};

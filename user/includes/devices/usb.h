@@ -1,7 +1,17 @@
-#ifndef __P_USB_H__
-#define __P_USB_H__
+#ifndef __USB_H__
+#define __USB_H__
 
 #include "stm32f10x.h"                  // Device header
+#include "device_manager.h"
+
+#define CONFIG_USB_DEBUG_EN				CONFIG_DEBUG_LV_M			//USB_DEBUG使能
+#define CONFIG_USB_PWR_EN				1								//USB 使能脚
+
+#if CONFIG_USB_PWR_EN
+//USB 使能脚配置
+#define CONFIG_USB_PWR_CLK				e_RCC_GPIOC
+#define CONFIG_USB_PWR_PIN				GPIO_PC_15
+#endif //CONFIG_USB_PWR_EN
 
 typedef enum{
 	E_USB_STATE_UNCONNECT 	= 0x00,		//未连接
@@ -91,13 +101,11 @@ extern USB_STATUS 	Usb_status;
 extern USB_DATA		Usb_data[8];
 extern USB_REQUEST	Usb_request;
 
-extern void p_usb_setup0(void);
-extern void p_usb_in0(void);
-extern void p_usb_out0(void);
+extern void usb_setup0(void);
+extern void usb_in0(void);
+extern void usb_out0(void);
 
-extern void p_usb_init(void);
-extern void p_usb_PowerOn(void);
-extern void p_usb_PowerOff(void);
+extern const DEVICE Usb;
 
 #endif
 

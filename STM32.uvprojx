@@ -509,6 +509,11 @@
               <FileType>5</FileType>
               <FilePath>.\user\includes\public.h</FilePath>
             </File>
+            <File>
+              <FileName>device_manager.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\user\includes\devices\device_manager.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -534,21 +539,6 @@
         <Group>
           <GroupName>peripherals</GroupName>
           <Files>
-            <File>
-              <FileName>p_debug.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\user\peripherals\p_debug.c</FilePath>
-            </File>
-            <File>
-              <FileName>p_led.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\user\peripherals\p_led.c</FilePath>
-            </File>
-            <File>
-              <FileName>p_usb.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\user\peripherals\p_usb.c</FilePath>
-            </File>
             <File>
               <FileName>p_spi.c</FileName>
               <FileType>1</FileType>
@@ -620,9 +610,29 @@
           <GroupName>devices</GroupName>
           <Files>
             <File>
+              <FileName>device_manager.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\user\devices\device_manager.c</FilePath>
+            </File>
+            <File>
+              <FileName>debug.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\user\devices\debug.c</FilePath>
+            </File>
+            <File>
+              <FileName>led.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\user\devices\led.c</FilePath>
+            </File>
+            <File>
               <FileName>mouse.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\user\devices\mouse.c</FilePath>
+            </File>
+            <File>
+              <FileName>usb.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\user\devices\usb.c</FilePath>
             </File>
           </Files>
         </Group>

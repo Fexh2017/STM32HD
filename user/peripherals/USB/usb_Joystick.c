@@ -1,7 +1,37 @@
 #include "usb_property.h"
 #include "f_usb.h"
-#include "p_usb.h"
+#include "usb.h"
 #include "config.h"
+
+
+//USB_DEBUGÅäÖÃ
+#if (CONFIG_USB_DEBUG_EN >= CONFIG_DEBUG_LV_H)
+#define USB_DBG(...)					DEBUG("[USB DBG] ",__VA_ARGS__)
+#define USB_DBGN(...)					DEBUGN("",__VA_ARGS__)
+#define DEV_DBG(...)					DEBUG("[DEV DBG] ",__VA_ARGS__)
+#define DEV_DBGN(...)					DEBUGN("",__VA_ARGS__)
+#else
+#define USB_DBGN(...)
+#define USB_DBG(...)  
+#define DEV_DBG(...) 
+#define DEV_DBGN(...) 
+#endif
+#if (CONFIG_USB_DEBUG_EN >= CONFIG_DEBUG_LV_M)
+#define USB_LOG(...)					DEBUG("[USB]     ",__VA_ARGS__)
+#define DEV_LOG(...)					DEBUG("[DEV]     ",__VA_ARGS__)
+#else
+#define USB_LOG(...)  
+#define DEV_LOG(...) 
+#endif
+#if (CONFIG_USB_DEBUG_EN >= CONFIG_DEBUG_LV_L)
+#define USB_ERR(...)					DEBUG("[USB_ERR] ",__VA_ARGS__)
+#define DEV_ERR(...)					DEBUG("[DEV_ERR] ",__VA_ARGS__)
+#else
+#define USB_ERR(...)  
+#define DEV_ERR(...) 
+#endif
+
+
 
 #if (USB_PROP == USB_PROP_JOYSTICK)
 
@@ -77,7 +107,7 @@ const USB_PROPERTY Usb_property = {
 	.init = usb_joystick_init,
 	.reset = usb_joystick_reset,
 	.setup = {
-		p_usb_setup0,
+		usb_setup0,
 		NULL,
 		NULL,
 		NULL,
@@ -87,7 +117,7 @@ const USB_PROPERTY Usb_property = {
 		NULL,
 	},
 	.in = {
-		p_usb_in0,
+		usb_in0,
 		usb_joystick_in1,
 		NULL,
 		NULL,
@@ -97,7 +127,7 @@ const USB_PROPERTY Usb_property = {
 		NULL,
 	},
 	.out = {
-		p_usb_out0,
+		usb_out0,
 		NULL,
 		NULL,
 		NULL,

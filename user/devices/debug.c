@@ -1,11 +1,10 @@
 #include "config.h"
+#include "debug.h"
 
 #if CONFIG_DEBUG_UART_EN
-
 #include "f_usart.h"
 #include "f_dma.h"
 #include "f_nvic.h"
-#include "p_debug.h"
 
 #if CONFIG_DEBUG_DMA
 
@@ -57,7 +56,7 @@ void DMA1_Channel4_IRQHandler(void)
 }
 #endif
 
-void p_debug_init(void)
+u8 p_debug_init(void)
 {
 	f_usart_init(DEBUG_UART, DEBUG_UART_BAUDRATE);
 	
@@ -74,6 +73,7 @@ void p_debug_init(void)
 	USART_DMACmd(USART1, USART_DMAReq_Tx, ENABLE);
 	DMA_ClearITPendingBit(DMA1_FLAG_TC4);
 #endif
+	return 0;
 }
 
 int fputc(int ch, FILE *f)
@@ -97,32 +97,15 @@ int fputc(int ch, FILE *f)
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #else
 
-void p_debug_init(void){}
+u8 p_debug_init(void){return 0xFF;}
 
 #endif
 
+const DEVICE Debug = {
+	.name = "debug",
+	.init = p_debug_init,
+	.read = NULL,
+	.write = NULL,
+};

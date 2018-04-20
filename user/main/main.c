@@ -1,36 +1,28 @@
 #include "config.h"
 #include "public.h"
 
-#include "p_debug.h"
-#include "p_led.h"
-#include "p_usb.h"
-
-#include "usb_property.h"
-
+#include "debug.h"
+#include "usb.h"
 #include "mouse.h"
 
 void sys_init(void)
 {
 	systick_init();
 	
-	p_debug_init();
+	Debug.init();
 	SYS_LOG("system init");
-	p_led_init(e_LED_ALL);
 	
 	Mouse.init();
-	SYS_LOG("USB init");
-	
-	p_usb_init();
+	Usb.init();
 }
 
 void sys_mainloop(void)
 {
 	MOUSE_DATA mouse_data;
 	
-	if(Mouse.read(&mouse_data) == 1)
+	if(Mouse.read(0,&mouse_data) == 1)
 	{
-		DEV_DBG("%02x %d %d %d",mouse_data.keys,mouse_data.x,mouse_data.y,mouse_data.wheel);
-		Usb_hid_property.send_event((u8*)&mouse_data, sizeof(mouse_data));
+		Usb.write(1, &mouse_data);
 		//delayms(2);
 	}
 }

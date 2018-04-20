@@ -23,6 +23,7 @@
 #define CONFIG_DEBUG_UART_EN 			CONFIG_DEBUG_LV_H				//DEBUG¥Æø⁄
 #define CONFIG_LED_EN					1								//LEDµ∆
 #define CONFIG_USB_EN					1								//USB
+#define CONFIG_MOUSE_EN					1								//MOUSE
 
 
 
@@ -55,20 +56,17 @@
 #if (CONFIG_DEBUG_UART_EN >= CONFIG_DEBUG_LV_H)
 #define SYS_DBG(...)					DEBUG("",__VA_ARGS__)
 #define SYS_DBGN(...)					DEBUGN("",__VA_ARGS__)
-#define DEV_DBG(...)					DEBUG("",__VA_ARGS__)
-#define DEV_DBGN(...)					DEBUGN("",__VA_ARGS__)
 #else
 #define SYS_DBG(...)  
+#define SYS_DBGN(...)	
 #endif
 #if (CONFIG_DEBUG_UART_EN >= CONFIG_DEBUG_LV_M)
 #define SYS_LOG(...)					DEBUG("[SYS]     ",__VA_ARGS__)
-#define DEV_LOG(...)					DEBUG("[DEV]     ",__VA_ARGS__)
 #else
 #define SYS_LOG(...)  
 #endif
 #if (CONFIG_DEBUG_UART_EN >= CONFIG_DEBUG_LV_L)
 #define SYS_ERR(...)					DEBUG("[SYS_ERR] ",__VA_ARGS__)
-#define DEV_ERR(...)					DEBUG("[DEV_ERR] ",__VA_ARGS__)
 #else
 #define SYS_ERR(...)  
 #endif
@@ -76,52 +74,8 @@
 
 
 
-
-
-/*LED≈‰÷√===================================================================*/
-#if CONFIG_LED_EN
-//LED0
-#define LED_RCC_0						e_RCC_GPIOA
-#define LED_PIN_0						GPIO_PA_08
-//LED1
-#define LED_RCC_1						e_RCC_GPIOD
-#define LED_PIN_1						GPIO_PA_02
-#endif //CONFIG_LED_EN
-
-
 /*USB≈‰÷√===================================================================*/
-#if CONFIG_USB_EN
-#define CONFIG_USB_DEBUG_EN				CONFIG_DEBUG_LV_M			//USB_DEBUG πƒ‹
-#define CONFIG_USB_PWR_EN				1								//USB  πƒ‹Ω≈
 
-#if CONFIG_USB_DEBUG_EN
-//USB_DEBUG≈‰÷√
-#if (CONFIG_USB_DEBUG_EN >= CONFIG_DEBUG_LV_H)
-#define USB_DBG(...)					DEBUG("[USB DBG] ",__VA_ARGS__)
-#define USB_DBGN(...)					DEBUGN("",__VA_ARGS__)
-#else
-#define USB_DBGN(...)
-#define USB_DBG(...)  
-#endif
-#if (CONFIG_USB_DEBUG_EN >= CONFIG_DEBUG_LV_M)
-#define USB_LOG(...)					DEBUG("[USB]     ",__VA_ARGS__)
-#else
-#define USB_LOG(...)  
-#endif
-#if (CONFIG_USB_DEBUG_EN >= CONFIG_DEBUG_LV_L)
-#define USB_ERR(...)					DEBUG("[USB_ERR] ",__VA_ARGS__)
-#else
-#define USB_ERR(...)  
-#endif
-#endif //CONFIG_USB_DEBUG_EN
-
-#if CONFIG_USB_PWR_EN
-//USB  πƒ‹Ω≈≈‰÷√
-#define CONFIG_USB_PWR_CLK				e_RCC_GPIOC
-#define CONFIG_USB_PWR_PIN				GPIO_PC_15
-#endif //CONFIG_USB_PWR_EN
-
-#endif //CONFIG_USB_EN
 
 
 /*÷–∂œ≈‰÷√==================================================================*/
