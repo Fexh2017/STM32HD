@@ -38,9 +38,9 @@ void f_timer_init(TIM_TypeDef* tim,u16 TIM_Period,u16 TIM_Prescaler)
 	}
 	
 	
-    TIM_TimeBaseStructure.TIM_Period = TIM_Period;       					//定时周期 20  
+    TIM_TimeBaseStructure.TIM_Period = TIM_Period;       			//定时周期
     TIM_TimeBaseStructure.TIM_Prescaler = TIM_Prescaler;       		//预分频，不分频 72M / (0+1) = 72M
-    TIM_TimeBaseStructure.TIM_ClockDivision = 0;    						//时钟分频系数
+    TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;    		//时钟分频系数
     TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;  	//向上计数模式
 	TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;
     TIM_TimeBaseInit(tim, &TIM_TimeBaseStructure);
@@ -81,22 +81,22 @@ void f_timer_it_config(TIM_TypeDef* tim, int IRQPriority, void (*fun)(void))
 			NVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn;	  
 			timer_irq[3] = fun;
 			break;
-		case (u32)TIM5:
-			NVIC_InitStructure.NVIC_IRQChannel = TIM5_IRQn;	  
-			timer_irq[4] = fun;
-			break;
-		case (u32)TIM6:
-			NVIC_InitStructure.NVIC_IRQChannel = TIM6_IRQn;	  
-			timer_irq[5] = fun;
-			break;
-		case (u32)TIM7:
-			NVIC_InitStructure.NVIC_IRQChannel = TIM7_IRQn;	  
-			timer_irq[6] = fun;
-			break;
-		case (u32)TIM8:
-			NVIC_InitStructure.NVIC_IRQChannel = TIM8_UP_IRQn;	  
-			timer_irq[7] = fun;
-			break;
+//		case (u32)TIM5:
+//			NVIC_InitStructure.NVIC_IRQChannel = TIM5_IRQn;	  
+//			timer_irq[4] = fun;
+//			break;
+//		case (u32)TIM6:
+//			NVIC_InitStructure.NVIC_IRQChannel = TIM6_IRQn;	  
+//			timer_irq[5] = fun;
+//			break;
+//		case (u32)TIM7:
+//			NVIC_InitStructure.NVIC_IRQChannel = TIM7_IRQn;	  
+//			timer_irq[6] = fun;
+//			break;
+//		case (u32)TIM8:
+//			NVIC_InitStructure.NVIC_IRQChannel = TIM8_UP_IRQn;	  
+//			timer_irq[7] = fun;
+//			break;
 		default:
 			break;
 	}

@@ -3,9 +3,8 @@
 
 #include "stm32f10x.h"                  // Device header
 
-enum RCC_APB_E
-{
-  e_RCC_AFIO = 1,
+typedef enum {
+  e_RCC_AFIO =1,
   e_RCC_GPIOA  ,
   e_RCC_GPIOB  ,
   e_RCC_GPIOC  ,
@@ -56,11 +55,11 @@ enum RCC_APB_E
   e_RCC_SRAM   ,
   e_RCC_FLITF  ,
   e_RCC_CRC    
-};
+}E_RCC_APB;
 
 
-void f_rcc_enable(enum RCC_APB_E rcc);
-void f_rcc_disable(enum RCC_APB_E rcc);
+void f_rcc_enable(E_RCC_APB rcc);
+void f_rcc_disable(E_RCC_APB rcc);
 
 
 #endif

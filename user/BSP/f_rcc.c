@@ -1,7 +1,7 @@
 #include "f_rcc.h"
 
 
-void f_rcc_enable(enum RCC_APB_E rcc)
+void f_rcc_enable(E_RCC_APB rcc)
 {
 	switch(rcc)
 	{
@@ -166,7 +166,7 @@ void f_rcc_enable(enum RCC_APB_E rcc)
 
 
 
-void f_rcc_disable(enum RCC_APB_E rcc)
+void f_rcc_disable(E_RCC_APB rcc)
 {
 	switch(rcc)
 	{

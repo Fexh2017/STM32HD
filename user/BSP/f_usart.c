@@ -12,11 +12,10 @@ void f_usart_init(u8 id, u32 baudrate)
 	{
 		case 1:
 			f_rcc_enable(e_RCC_USART1);
-			f_rcc_enable(e_RCC_GPIOA);
 			f_rcc_enable(e_RCC_AFIO);
 		
-			f_gpio_init(GPIOA,GPIO_Pin_9,GPIO_Mode_AF_PP);
-			f_gpio_init(GPIOA,GPIO_Pin_10,GPIO_Mode_IN_FLOATING);
+			f_gpio_init(GPIO_PA_09,GPIO_Mode_AF_PP);
+			f_gpio_init(GPIO_PA_10,GPIO_Mode_IN_FLOATING);
 		
 			USART_InitStructure.USART_BaudRate = baudrate;
 			USART_InitStructure.USART_WordLength = USART_WordLength_8b;

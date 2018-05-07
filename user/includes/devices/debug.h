@@ -2,7 +2,8 @@
 #define __DEBUG_H__
 
 #include "stm32f10x.h"
+#include "device_manager.h"
 
-void p_debug_init(void);
+extern const DEVICE Debug;
 
 #endif

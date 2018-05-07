@@ -11,13 +11,12 @@ void f_adc_init(void)
 	
 	//打开时钟
 	f_rcc_enable(e_RCC_ADC1);
-	f_rcc_enable(e_RCC_GPIOA);
 	
 	//配置GPIO
-	f_gpio_init(GPIOA,GPIO_Pin_0,GPIO_Mode_AIN);
+	f_gpio_init(GPIO_PA_00, GPIO_Mode_AIN);
 	
-  //配置中断优先级
-  f_nvic_config(ADC1_2_IRQn,ADC1_2_IRQPriority);
+	//配置中断优先级
+	f_nvic_config(ADC1_2_IRQn,ADC1_2_IRQPriority);
 	
 	//配置ADC
 	ADC_InitStructure.ADC_Mode = ADC_Mode_Independent ;

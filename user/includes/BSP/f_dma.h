@@ -52,7 +52,7 @@ TIM		TIM5	|TIM5_CH4	|TIM5_CH3	|			|TIM5_CH2	|TIM5_CH1	|
 ----------------+-----------+-----------+-----------+-----------+-----------+
 */
 
-void f_dma_init(u32 from,u32 to,u32 size,DMA_Channel_TypeDef* channel);
-void f_dma_it_config(DMA_Channel_TypeDef* DMA_Channel, int IRQPriority, void (*fun)(void));
+void f_dma_init(u32 peripheral, u32 memory, u32 len, DMA_Channel_TypeDef* channel, u32 dir, u32 mode);
+void f_dma_it_config(DMA_Channel_TypeDef* DMA_Channel, int IRQPriority);
 
 #endif

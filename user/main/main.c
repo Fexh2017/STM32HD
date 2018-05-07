@@ -1,20 +1,22 @@
 #include "config.h"
 #include "public.h"
 
-#include "p_debug.h"
-#include "p_led.h"
+#include "debug.h"
+
 
 void sys_init(void)
 {
-	p_debug_init();
+	system_init();
+	
+	Debug.init();
 	SYS_LOG("system init");
-	p_led_init(e_LED_0);
+	
 }
 
 void sys_mainloop(void)
 {
-	p_led_toggle(e_LED_0);
-	delayms(500);
+	SYS_DBG("hello world");
+	delayms(1000);
 }
 
 int main(void)
