@@ -51,9 +51,6 @@ typedef enum{
 	USB_EPR_RX_Status_VALID    =(0x3000), /* EndPoint RX VALID */
 }USB_EPR_RX_Status_TypeDef;
 
-/* External variables --------------------------------------------------------*/
-extern volatile u16 wIstr;  /* ISTR register last read value */
-
 
 /* Exported functions ------------------------------------------------------- */
 extern void f_usb_SetCNTR(u16 wRegValue);
