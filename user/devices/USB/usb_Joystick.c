@@ -1,7 +1,36 @@
+#include "config.h"
 #include "usb_property.h"
 #include "f_usb.h"
-#include "p_usb.h"
-#include "config.h"
+#include "usb.h"
+
+//USB_DEBUGÅäÖÃ
+#if (CONFIG_USB_DEBUG_EN >= CONFIG_DEBUG_LV_H)
+#define USB_DBG(...)					DEBUG("[USB DBG] ",__VA_ARGS__)
+#define USB_DBGN(...)					DEBUGN("",__VA_ARGS__)
+#define DEV_DBG(...)					DEBUG("[DEV DBG] ",__VA_ARGS__)
+#define DEV_DBGN(...)					DEBUGN("",__VA_ARGS__)
+#else
+#define USB_DBGN(...)
+#define USB_DBG(...)  
+#define DEV_DBG(...) 
+#define DEV_DBGN(...) 
+#endif
+#if (CONFIG_USB_DEBUG_EN >= CONFIG_DEBUG_LV_M)
+#define USB_LOG(...)					DEBUG("[USB]     ",__VA_ARGS__)
+#define DEV_LOG(...)					DEBUG("[DEV]     ",__VA_ARGS__)
+#else
+#define USB_LOG(...)  
+#define DEV_LOG(...) 
+#endif
+#if (CONFIG_USB_DEBUG_EN >= CONFIG_DEBUG_LV_L)
+#define USB_ERR(...)					DEBUG("[USB_ERR] ",__VA_ARGS__)
+#define DEV_ERR(...)					DEBUG("[DEV_ERR] ",__VA_ARGS__)
+#else
+#define USB_ERR(...)  
+#define DEV_ERR(...) 
+#endif
+
+
 
 #if (USB_PROP == USB_PROP_JOYSTICK)
 
@@ -21,13 +50,13 @@ void usb_joystick_reset(void)
 	f_usb_SetEPRxAddr(USB_ENDP0, USB_ENDP0_RXADDR);
 	f_usb_SetEPTxAddr(USB_ENDP0, USB_ENDP0_TXADDR);
 	f_usb_Clear_Status_Out(USB_ENDP0);
-	f_usb_SetEPRxCount(USB_ENDP0, USB_MAX_PACKET_SIZE);
+	f_usb_SetEPRxCount(USB_ENDP0, USB_EP0_MAX_PACKET_SIZE);
 	f_usb_SetEPRxValid(USB_ENDP0);
 	
 	/* Initialize Endpoint 1 */
 	f_usb_SetEPType(USB_ENDP1, USB_EP_INTERRUPT);
 	f_usb_SetEPTxAddr(USB_ENDP1, USB_ENDP1_TXADDR);
-	f_usb_SetEPTxCount(USB_ENDP1, 4);
+	f_usb_SetEPTxCount(USB_ENDP1, USB_EP1_MAX_PACKET_SIZE);
 	f_usb_SetEPRxStatus(USB_ENDP1, USB_EPR_RX_Status_DIS);
 	f_usb_SetEPTxStatus(USB_ENDP1, USB_EPR_TX_Status_NAK);
 	
@@ -37,8 +66,8 @@ void usb_joystick_reset(void)
 	
 	f_usb_SetDADDR(0 | USB_DADDR_EF);
 	
-	Usb_status.Max_packet[0] = USB_MAX_PACKET_SIZE;
-	Usb_status.Max_packet[1] = 4;
+	Usb_status.Max_packet[0] = USB_EP0_MAX_PACKET_SIZE;
+	Usb_status.Max_packet[1] = USB_EP1_MAX_PACKET_SIZE;
 	Usb_status.Dev_state = 0x02;
 }
 
@@ -64,6 +93,10 @@ u8 usb_joystick_set_configuration(u16 val)
 
 void usb_joystick_send_event(u8* buf, u32 len)
 {
+	if(len > USB_EP1_MAX_PACKET_SIZE)
+	{
+		USB_ERR("EP1 OVERFLOW");
+	}
 	f_usb_write(buf, f_usb_GetEPTxAddr(USB_ENDP1), len);
 	f_usb_SetEPTxValid(USB_ENDP1);
 }
@@ -77,7 +110,7 @@ const USB_PROPERTY Usb_property = {
 	.init = usb_joystick_init,
 	.reset = usb_joystick_reset,
 	.setup = {
-		p_usb_setup0,
+		usb_setup0,
 		NULL,
 		NULL,
 		NULL,
@@ -87,7 +120,7 @@ const USB_PROPERTY Usb_property = {
 		NULL,
 	},
 	.in = {
-		p_usb_in0,
+		usb_in0,
 		usb_joystick_in1,
 		NULL,
 		NULL,
@@ -97,7 +130,7 @@ const USB_PROPERTY Usb_property = {
 		NULL,
 	},
 	.out = {
-		p_usb_out0,
+		usb_out0,
 		NULL,
 		NULL,
 		NULL,
@@ -117,12 +150,6 @@ const USB_HID_PROPERTY Usb_hid_property = {
 };
 
 
-
-
-
-
-
-
 const u8 Usb_hid_report_descriptor[] = {
 USB_HID_REPORT_USAGE_PAGE(e_USB_HID_UP_GENERIC_DESKTOP)
 USB_HID_REPORT_USAGE(e_USB_HID_USAGE_MOUSE)
@@ -131,27 +158,36 @@ USB_HID_REPORT_COLLECTION(e_USB_HID_COL_APPLICATION)
 	USB_HID_REPORT_COLLECTION(e_USB_HID_COL_PHYSICAL)
 		USB_HID_REPORT_USAGE_PAGE(e_USB_HID_UP_BUTTON)
 		USB_HID_REPORT_USAGE_MIN(1)
-		USB_HID_REPORT_USAGE_MAX(3)
+		USB_HID_REPORT_USAGE_MAX(5)
 		USB_HID_REPORT_LOGICAL_MIN(0)
 		USB_HID_REPORT_LOGICAL_MAX(1)
 		USB_HID_REPORT_REPORT_SIZE(1)
-		USB_HID_REPORT_REPORT_CNT(3)
+		USB_HID_REPORT_REPORT_CNT(5)
 		USB_HID_REPORT_INPUT(e_USB_HID_VAL_DATA | e_USB_HID_VAL_VAR | e_USB_HID_VAL_ABS)
 		
-		USB_HID_REPORT_REPORT_SIZE(5)
+		USB_HID_REPORT_REPORT_SIZE(3)
 		USB_HID_REPORT_REPORT_CNT(1)
 		USB_HID_REPORT_INPUT(e_USB_HID_VAL_CONST | e_USB_HID_VAL_ARRAY | e_USB_HID_VAL_ABS)
-		
+	
+//		USB_HID_REPORT_USAGE_PAGE(e_USB_HID_UP_GENERIC_DESKTOP)
+//		USB_HID_REPORT_USAGE(e_USB_HID_USAGE_X)
+//		USB_HID_REPORT_USAGE(e_USB_HID_USAGE_Y)
+//		USB_HID_REPORT_LOGICAL_MIN_16(-32767)
+//		USB_HID_REPORT_LOGICAL_MAX_16(32767)
+//		USB_HID_REPORT_REPORT_SIZE(16)
+//		USB_HID_REPORT_REPORT_CNT(2)
+
 		USB_HID_REPORT_USAGE_PAGE(e_USB_HID_UP_GENERIC_DESKTOP)
 		USB_HID_REPORT_USAGE(e_USB_HID_USAGE_X)
 		USB_HID_REPORT_USAGE(e_USB_HID_USAGE_Y)
 		USB_HID_REPORT_USAGE(e_USB_HID_USAGE_WHEEL)
-		USB_HID_REPORT_LOGICAL_MIN(-127)
-		USB_HID_REPORT_LOGICAL_MAX(127)
-		USB_HID_REPORT_REPORT_SIZE(8)
+		USB_HID_REPORT_LOGICAL_MIN_16(-32767)
+		USB_HID_REPORT_LOGICAL_MAX_16(32767)
+		USB_HID_REPORT_REPORT_SIZE(16)
 		USB_HID_REPORT_REPORT_CNT(3)
 		USB_HID_REPORT_INPUT(e_USB_HID_VAL_DATA | e_USB_HID_VAL_VAR | e_USB_HID_VAL_REL)
 	USB_HID_REPORT_ENDCOLLECTION()
+	
 USB_HID_REPORT_ENDCOLLECTION()
 };
 
@@ -164,9 +200,9 @@ const USB_DEVICE_DESCRIPTOR Usb_device_descriptor = {
 	.bDeviceClass 		= 0,
 	.bDeviceSubClass 	= 0,
 	.bDeviceProtocol 	= 0,
-	.bMaxPacketSize 	= USB_MAX_PACKET_SIZE,
+	.bMaxPacketSize 	= USB_EP0_MAX_PACKET_SIZE,
 	.idVender 			= 0x0483,
-	.idProduct 			= 0x5714,
+	.idProduct 			= 0x5711,
 	.bcdDevice 			= 0x0200,
 	.iManufacturer 		= 1,
 	.iProduct 			= 2,
@@ -188,7 +224,7 @@ const USB_CONFIGURATION Usb_configuration = {
 	.interfaces			= {
 		.bLength				= 9,
 		.bDescriptorType		= 0x04,
-		.bInterfaceNumber		= 0x00,
+		.bInterfaceNumber		= 0x01,
 		.bAlternateSettiog		= 0x00,
 		.bNumEndpoints			= 0x01,
 		.bInterfaceClass		= 0x03,
@@ -199,8 +235,8 @@ const USB_CONFIGURATION Usb_configuration = {
 	.hid				= {
 		.bLength				= 9,
 		.bDescripterType		= 0x21,
-		.bcdHID					= 0x0100,
-		.bCountyCode			= 33,
+		.bcdHID					= 0x0110,
+		.bCountyCode			= 0,
 		.bNumDescriptors		= 0x01,
 		.bDescriptorType 		= 0x22,
 		.wDescriptorLength 		= USB_HID_REPORT_LEN,
@@ -210,8 +246,8 @@ const USB_CONFIGURATION Usb_configuration = {
 		.bDescripterType		= 0x05,
 		.bEndpointAddress		= 0x81,
 		.bmAttributes			= 0x03,
-		.wMaxPacketSize			= 0x0004,
-		.bInterval				= 0x20,
+		.wMaxPacketSize			= (u16)USB_EP1_MAX_PACKET_SIZE,
+		.bInterval				= 0x02,
 	},
 };
 

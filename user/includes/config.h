@@ -21,8 +21,9 @@
 
 /*功能配置==================================================================*/
 #define CONFIG_DEBUG_UART_EN 			CONFIG_DEBUG_LV_H				//DEBUG串口
-#define CONFIG_LED_EN					1								//LED灯
+#define CONFIG_LED_EN					0								//LED灯
 #define CONFIG_USB_EN					1								//USB
+#define CONFIG_MOUSE_EN					1								//MOUSE
 
 
 
@@ -34,7 +35,7 @@
 #define DEBUG_UART_BAUDRATE		115200	//串口波特率
 
 #define CONFIG_DEBUG_DMA 		1		//使用DMA发送
-#define CONFIG_DEBUG_TIMESTAMP	0		//使用时间戳
+#define CONFIG_DEBUG_TIMESTAMP	1		//使用时间戳
 
 #define DEBUGN(fmt,...) 	do{printf("%s ",fmt);printf(__VA_ARGS__);}while(0)
 #if CONFIG_DEBUG_TIMESTAMP
@@ -53,9 +54,11 @@
 
 //SYS_DEBUG配置
 #if (CONFIG_DEBUG_UART_EN >= CONFIG_DEBUG_LV_H)
-#define SYS_DBG(...)					DEBUGN("",__VA_ARGS__)
+#define SYS_DBG(...)					DEBUG("",__VA_ARGS__)
+#define SYS_DBGN(...)					DEBUGN("",__VA_ARGS__)
 #else
 #define SYS_DBG(...)  
+#define SYS_DBGN(...)	
 #endif
 #if (CONFIG_DEBUG_UART_EN >= CONFIG_DEBUG_LV_M)
 #define SYS_LOG(...)					DEBUG("[SYS]     ",__VA_ARGS__)
@@ -67,59 +70,6 @@
 #else
 #define SYS_ERR(...)  
 #endif
-
-
-
-
-
-
-/*LED配置===================================================================*/
-#if CONFIG_LED_EN
-//LED0
-#define LED_RCC_0						e_RCC_GPIOA
-#define LED_PORT_0 						GPIOA
-#define LED_PIN_0						0x0100
-//LED1
-#define LED_RCC_1						e_RCC_GPIOD
-#define LED_PORT_1						GPIOD
-#define LED_PIN_1						0x0004
-#endif //CONFIG_LED_EN
-
-
-/*USB配置===================================================================*/
-#if CONFIG_USB_EN
-#define CONFIG_USB_DEBUG_EN				CONFIG_DEBUG_LV_M			//USB_DEBUG使能
-#define CONFIG_USB_PWR_EN				1								//USB 使能脚
-
-#if CONFIG_USB_DEBUG_EN
-//USB_DEBUG配置
-#if (CONFIG_USB_DEBUG_EN >= CONFIG_DEBUG_LV_H)
-#define USB_DBG(...)					DEBUG("[USB DBG] ",__VA_ARGS__)
-#define USB_DBGN(...)					DEBUGN("",__VA_ARGS__)
-#else
-#define USB_DBGN(...)
-#define USB_DBG(...)  
-#endif
-#if (CONFIG_USB_DEBUG_EN >= CONFIG_DEBUG_LV_M)
-#define USB_LOG(...)					DEBUG("[USB]     ",__VA_ARGS__)
-#else
-#define USB_LOG(...)  
-#endif
-#if (CONFIG_USB_DEBUG_EN >= CONFIG_DEBUG_LV_L)
-#define USB_ERR(...)					DEBUG("[USB_ERR] ",__VA_ARGS__)
-#else
-#define USB_ERR(...)  
-#endif
-#endif //CONFIG_USB_DEBUG_EN
-
-#if CONFIG_USB_PWR_EN
-//USB 使能脚配置
-#define CONFIG_USB_PWR_CLK				e_RCC_GPIOC
-#define CONFIG_USB_PWR_PORT				GPIOC
-#define CONFIG_USB_PWR_PIN				GPIO_Pin_15
-#endif //CONFIG_USB_PWR_EN
-
-#endif //CONFIG_USB_EN
 
 
 /*中断配置==================================================================*/

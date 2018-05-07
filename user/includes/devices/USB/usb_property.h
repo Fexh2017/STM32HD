@@ -6,6 +6,8 @@
 #define USB_PROP_NONE		0
 #define USB_PROP_JOYSTICK	1
 
+#if CONFIG_USB_EN
+
 #define USB_PROP			USB_PROP_JOYSTICK
 
 typedef struct _USB_PROPERTY{
@@ -102,5 +104,8 @@ extern const USB_LANGUAGE_DESCRIPTOR	Usb_language;
 extern const USB_STRING_DESCRIPTOR		Usb_string_manufacturer;
 extern const USB_STRING_DESCRIPTOR 		Usb_string_product;
 extern const USB_STRING_DESCRIPTOR 		Usb_string_serialnumber;
+
+#endif
+
 #endif
 

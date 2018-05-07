@@ -7,7 +7,7 @@
 #define SYSTICK_US 		100 //us
 
 //函数声明
-extern void systick_init(void);									//系统计时初始化
+extern void system_init(void);									//系统初始化
 extern u32 Get_Systick(void);									//系统计时
 extern u32 Get_Syshour(void);									//系统计时（小时）
 extern void delayms(u32 tim);									//延时-毫秒
