@@ -19,9 +19,10 @@
 #define USB_ENDP0_RXADDR        (0x18)
 #define USB_ENDP0_TXADDR        (0x58)
 /* EP1 tx buffer base address */
-#define USB_ENDP1_TXADDR        (0x100)
+#define USB_ENDP1_TXADDR        (0x98)
 /* MAX PACKET SIZE*/
-#define USB_MAX_PACKET_SIZE		(0x40)
+#define USB_EP0_MAX_PACKET_SIZE		(0x40)
+#define USB_EP1_MAX_PACKET_SIZE		(0x07)
 /* USB SUSPEND ENABLE*/
 #define USB_SUSPEND_ENABLE		TRUE
 

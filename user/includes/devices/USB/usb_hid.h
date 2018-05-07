@@ -44,11 +44,13 @@ typedef enum _USB_HID_REPORT_COL{
 #define USB_HID_REPORT_ENDCOLLECTION()	0xC0,
 
 #define USB_HID_REPORT_USAGE_PAGE(v)	0x05,v,
+#define USB_HID_REPORT_USAGE_PAGE_16(v)	0x05,(u8)v,(u8)(v >> 8),
 typedef enum _USB_HID_REPORT_UP{
 	e_USB_HID_UP_GENERIC_DESKTOP	= 0x01,	//桌面
 	e_USB_HID_UP_KEYBOARD			= 0x07,	//键盘
 	e_USB_HID_UP_LEDS				= 0x08, //灯
 	e_USB_HID_UP_BUTTON				= 0x09, //按钮
+	e_USB_HID_UP_CONSUMER			= 0x0C, //用户
 }E_USB_HID_REPORT_UP;
 
 #define USB_HID_REPORT_LOGICAL_MIN(v)	0x15,(u8)v,
@@ -59,8 +61,10 @@ typedef enum _USB_HID_REPORT_UP{
 #define USB_HID_REPORT_LOGICAL_MAX_32(v)	0x27,(u8)v,(u8)(v >> 8),(u8)(v >> 16),(u8)(v >> 24),
 #define USB_HID_REPORT_REPORT_SIZE(v)	0x75,v,
 #define USB_HID_REPORT_REPORT_CNT(v)	0x95,v,
+#define USB_HID_REPORT_REPORT_ID(v)		0x85,v,
 
 #define USB_HID_REPORT_USAGE(v)			0x09,v,
+#define USB_HID_REPORT_USAGE_16(v)		0x09,(u8)v,(u8)(v >> 8),
 typedef enum _USB_HID_REPORT_USAGE{
 	e_USB_HID_USAGE_POINTER			= 0x01,	//指针
 	e_USB_HID_USAGE_MOUSE			= 0x02, //鼠标

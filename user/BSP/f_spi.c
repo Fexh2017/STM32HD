@@ -15,8 +15,7 @@ void f_spi_init(u32 cs)
 	if(init == 0)
 	{
 		init = 1;
-		f_rcc_enable(e_RCC_GPIOA);
-		
+	
 		f_gpio_init(SPI_MISO, GPIO_Mode_AF_PP);
 		f_gpio_init(SPI_MOSI, GPIO_Mode_AF_PP);
 		f_gpio_init(SPI_CLK,  GPIO_Mode_AF_PP);
@@ -67,7 +66,6 @@ void f_spi_init(u32 cs)
 	if(init == 0)
 	{
 		init = 1;
-		f_rcc_enable(e_RCC_GPIOA);
 		
 		f_gpio_init(SPI_MISO, GPIO_Mode_IPU);
 		f_gpio_init(SPI_MOSI, GPIO_Mode_Out_PP);

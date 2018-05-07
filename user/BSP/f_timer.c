@@ -81,22 +81,22 @@ void f_timer_it_config(TIM_TypeDef* tim, int IRQPriority, void (*fun)(void))
 			NVIC_InitStructure.NVIC_IRQChannel = TIM4_IRQn;	  
 			timer_irq[3] = fun;
 			break;
-		case (u32)TIM5:
-			NVIC_InitStructure.NVIC_IRQChannel = TIM5_IRQn;	  
-			timer_irq[4] = fun;
-			break;
-		case (u32)TIM6:
-			NVIC_InitStructure.NVIC_IRQChannel = TIM6_IRQn;	  
-			timer_irq[5] = fun;
-			break;
-		case (u32)TIM7:
-			NVIC_InitStructure.NVIC_IRQChannel = TIM7_IRQn;	  
-			timer_irq[6] = fun;
-			break;
-		case (u32)TIM8:
-			NVIC_InitStructure.NVIC_IRQChannel = TIM8_UP_IRQn;	  
-			timer_irq[7] = fun;
-			break;
+//		case (u32)TIM5:
+//			NVIC_InitStructure.NVIC_IRQChannel = TIM5_IRQn;	  
+//			timer_irq[4] = fun;
+//			break;
+//		case (u32)TIM6:
+//			NVIC_InitStructure.NVIC_IRQChannel = TIM6_IRQn;	  
+//			timer_irq[5] = fun;
+//			break;
+//		case (u32)TIM7:
+//			NVIC_InitStructure.NVIC_IRQChannel = TIM7_IRQn;	  
+//			timer_irq[6] = fun;
+//			break;
+//		case (u32)TIM8:
+//			NVIC_InitStructure.NVIC_IRQChannel = TIM8_UP_IRQn;	  
+//			timer_irq[7] = fun;
+//			break;
 		default:
 			break;
 	}

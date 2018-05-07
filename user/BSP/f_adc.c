@@ -11,7 +11,6 @@ void f_adc_init(void)
 	
 	//¥Úø™ ±÷”
 	f_rcc_enable(e_RCC_ADC1);
-	f_rcc_enable(e_RCC_GPIOA);
 	
 	//≈‰÷√GPIO
 	f_gpio_init(GPIO_PA_00, GPIO_Mode_AIN);

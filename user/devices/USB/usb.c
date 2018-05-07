@@ -390,13 +390,12 @@ void usb_istr(void)
 		if(Usb_property.reset)
 		{
 			Usb_property.reset();
-			
-			Usb_status.State = E_USB_STATE_DEFAULT;
-			Usb_status.DAddr = 0;
-			Usb_status.Ep_enable = (1 << USB_ENDP0);
-			Usb_status.Ep_halt = 0;
-			Usb_status.Config_val = 0;
 		}
+		Usb_status.State = E_USB_STATE_DEFAULT;
+		Usb_status.DAddr = 0;
+		Usb_status.Ep_enable = (1 << USB_ENDP0);
+		Usb_status.Ep_halt = 0;
+		Usb_status.Config_val = 0;
 		f_usb_SetISTR((u16)(~USB_ISTR_RESET));
 	}
 #endif
@@ -537,12 +536,12 @@ u8 usb_init(void)
 	DEV_LOG("usb init");
 	
 #if CONFIG_USB_PWR_EN
-	f_rcc_enable(CONFIG_USB_PWR_CLK);
 	f_gpio_init(CONFIG_USB_PWR_PIN,GPIO_Mode_Out_PP);
-	
+
 	f_gpio_reset(CONFIG_USB_PWR_PIN);
 	delayms(200);
 	f_gpio_set(CONFIG_USB_PWR_PIN);
+	
 #endif
 	
 	f_nvic_config(USB_LP_CAN1_RX0_IRQn, CONFIG_NVIC_USB_LP);
@@ -563,16 +562,16 @@ u8 usb_init(void)
 	return 0;
 }
 
-u8 usb_read(u32 addr, void *data)
+u8 usb_read(u32 addr, void *data, u32 len)
 {
 	return 0;
 }
 
-u8 usb_write(u32 addr, void *data)
+u8 usb_write(u32 addr, void *data, u32 len)
 {
 	if(addr == 1)
 	{
-		Usb_hid_property.send_event(data, 4);
+		Usb_hid_property.send_event(data, len);
 	}
 	return 0;
 }

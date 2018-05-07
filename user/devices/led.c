@@ -30,20 +30,20 @@ u8 led_init(void)
 	return 0;
 }
 
-u8 led_read(u32 addr, void *data)
+u8 led_read(u32 addr, void *data, u32 len)
 {
 	return 0;
 }
 
-u8 led_write(u32 addr, void *data)
+u8 led_write(u32 addr, void *data, u32 len)
 {
 	return 0;
 }
 
 #else
 u8 led_init(void){return 0xFF;}
-u8 led_read(u32 addr, void *data){return 0xFF;}
-u8 led_write(u32 addr, void *data){return 0xFF;}
+u8 led_read(u32 addr, void *data, u32 len){return 0xFF;}
+u8 led_write(u32 addr, void *data, u32 len){return 0xFF;}
 #endif
 
 const DEVICE Led = 

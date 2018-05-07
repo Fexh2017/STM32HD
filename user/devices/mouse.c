@@ -42,7 +42,7 @@ u8 mouse_navi_init_buf[] =
 	0x1F, 0x00,
 	0x1C, 0x80,
 	0x1D, 0x7F,
-//	0x12, 0x26,	//800 cpi, 8ms run_rate
+	0x12, 0x66,	//1600 cpi, 8ms run_rate
 //	0x13, 0x04,	//downshift_time = x * 8 * run_rate
 //	0x36, 0x04,	//800 cpi
 	
@@ -98,8 +98,6 @@ u8 mouse_navi_check(void)
 u8 mouse_navi_init(void)
 {
 	u8 buf[4];
-	f_rcc_enable(e_RCC_GPIOA);
-	f_rcc_enable(e_RCC_GPIOB);
 	f_spi_init(MOUSE_NAVI_CSN);
 	f_gpio_init(MOUSE_NAVI_CSN, GPIO_Mode_Out_PP);
 	f_gpio_init(MOUSE_NAVI_MOTION, GPIO_Mode_IPU);
@@ -120,13 +118,13 @@ u8 mouse_navi_init(void)
 		
 		mouse_navi_readregbuf(0x42, buf, 4);
 		
-		mouse_navi_writereg(0x3C, 0x27);
-		mouse_navi_writereg(0x22, 0x0A);
-		mouse_navi_writereg(0x21, 0x01);
-		mouse_navi_writereg(0x3C, 0x32);
-		mouse_navi_writereg(0x23, 0x20);
-		mouse_navi_writereg(0x3C, 0x05);
-		mouse_navi_writereg(0x37, 0xB9);
+//		mouse_navi_writereg(0x3C, 0x27);
+//		mouse_navi_writereg(0x22, 0x0A);
+//		mouse_navi_writereg(0x21, 0x01);
+//		mouse_navi_writereg(0x3C, 0x32);
+//		mouse_navi_writereg(0x23, 0x20);
+//		mouse_navi_writereg(0x3C, 0x05);
+//		mouse_navi_writereg(0x37, 0xB9);
 		delayms(10);
 
 		for(int i = 0; i < sizeof(mouse_navi_init_buf); i += 2)
@@ -160,7 +158,8 @@ void mouse_navi_read(s16 *x, s16 *y)
 		{
 			*y |= 0xF000;
 		}
-		//DEV_DBG("%02x %4d %4d",buf[0], *x, *y);
+		*y = -*y;
+		//DEV_DBG("%4d %4d", *x, *y);
 	}else
 	{
 		*x = 0;
@@ -175,7 +174,6 @@ void mouse_wheel_init(void)
 {
 	TIM_ICInitTypeDef Tim_ICInitStructure;
 	
-	f_rcc_enable(e_RCC_GPIOB);
 	f_rcc_enable(e_RCC_TIM4);
 	f_gpio_init(GPIO_PB_06 | GPIO_PB_07, GPIO_Mode_IPU);
 	
@@ -197,7 +195,7 @@ s8 mouse_wheel_read(void)
 {
 	static s8 last_wheel = 0;
 	u8 tmp = TIM4->CNT;
-	s8 value = (s8)tmp - last_wheel;
+	s8 value =  last_wheel - (s8)tmp;
 	last_wheel = tmp;
 	
 	//DEV_DBG("%5d  %d", tmp, value);
@@ -208,8 +206,8 @@ s8 mouse_wheel_read(void)
 
 
 /*   °´¼ü   */
-#define MOUSE_KEYS_1 GPIO_PB_09
-#define MOUSE_KEYS_2 GPIO_PB_08
+#define MOUSE_KEYS_1 GPIO_PB_08
+#define MOUSE_KEYS_2 GPIO_PB_09
 #define MOUSE_KEYS_3 GPIO_PB_14
 #define MOUSE_KEYS_4 GPIO_PB_13
 #define MOUSE_KEYS_5 GPIO_PA_14
@@ -217,8 +215,6 @@ s8 mouse_wheel_read(void)
 
 void mouse_keys_init(void)
 {
-	f_rcc_enable(e_RCC_GPIOA);
-	f_rcc_enable(e_RCC_GPIOB);
 	f_gpio_init(MOUSE_KEYS_1, GPIO_Mode_IPU);
 	f_gpio_init(MOUSE_KEYS_2, GPIO_Mode_IPU);
 }
@@ -267,7 +263,7 @@ u8 mouse_init(void)
 	return 0;
 }
 
-u8 mouse_read(u32 addr, void *data)
+u8 mouse_read(u32 addr, void *data, u32 len)
 {
 	s16 x,y;
 	static u8 last_state = 0;
@@ -302,14 +298,14 @@ u8 mouse_read(u32 addr, void *data)
 	}
 }
 
-u8 mouse_write(u32 addr, void *data)
+u8 mouse_write(u32 addr, void *data, u32 len)
 {
 	return 0;
 }
 #else
 u8 mouse_init(void){return 0xFF;}
-u8 mouse_read(u32 addr, void *data){return 0xFF;}
-u8 mouse_write(u32 addr, void *data){return 0xFF;}
+u8 mouse_read(u32 addr, void *data, u32 len){return 0xFF;}
+u8 mouse_write(u32 addr, void *data, u32 len){return 0xFF;}
 #endif
 
 

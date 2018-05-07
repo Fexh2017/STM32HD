@@ -1,4 +1,5 @@
 #include "public.h"
+#include "f_rcc.h"
 
 #define SYSTICK_CNT 	(SystemCoreClock / 1000000 * SYSTICK_US)
 #define SYSTICK_HOUR 	(3600000000 / SYSTICK_US)
@@ -7,9 +8,13 @@ volatile static u32 Systick_H = 0;	//小时
 volatile static u32 Systick_L = 0;	//SYSTICK_CNT us
 volatile static u32 Systick_Delay = 0; //延时
 
-void systick_init(void)
+void system_init(void)
 {
+	//系统时钟
 	SysTick_Config(SYSTICK_CNT); //100us
+	//关闭jtag
+	f_rcc_enable(e_RCC_AFIO);
+	GPIO_PinRemapConfig(GPIO_Remap_SWJ_Disable, ENABLE);
 }
 
 void SysTick_Handler(void)

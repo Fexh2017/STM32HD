@@ -7,7 +7,6 @@ void f_dac_init(u8 channel)
 {
 	DAC_InitTypeDef  DAC_InitStructure;
 	
-	f_rcc_enable(e_RCC_GPIOA);
 	f_rcc_enable(e_RCC_DAC);
 	
 	DAC_InitStructure.DAC_Trigger = DAC_Trigger_Software;

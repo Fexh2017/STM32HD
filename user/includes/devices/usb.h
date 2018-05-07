@@ -9,7 +9,6 @@
 
 #if CONFIG_USB_PWR_EN
 //USB  πƒ‹Ω≈≈‰÷√
-#define CONFIG_USB_PWR_CLK				e_RCC_GPIOA
 #define CONFIG_USB_PWR_PIN				GPIO_PA_13
 #endif //CONFIG_USB_PWR_EN
 

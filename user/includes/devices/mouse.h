@@ -14,13 +14,15 @@ typedef enum _MOUSE_STATE{
 	E_MOUSE_ERR  = 0x80,
 }E_MOUSE_STATE;
 
+#pragma pack(1)
 typedef struct _MOUSE_DATA{
 	u8 keys;
-	s8 x;
-	s8 y;
-	s8 wheel;
+	s16 x;
+	s16 y;
+	s16 wheel;
+//	s8 consumer;
 }MOUSE_DATA;
-
+#pragma pack()
 
 
 
