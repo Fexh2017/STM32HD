@@ -589,6 +589,11 @@
               <FileType>1</FileType>
               <FilePath>.\user\BSP\f_spi.c</FilePath>
             </File>
+            <File>
+              <FileName>f_pwm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\user\BSP\f_pwm.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

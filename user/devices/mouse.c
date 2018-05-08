@@ -249,7 +249,13 @@ u8 mouse_state = E_MOUSE_IDLE;
 u8 mouse_init(void)
 {
 	u8 err = 0;
-	err = mouse_navi_init();
+	while(1)
+	{
+		err = mouse_navi_init();
+		if(err == 0)break;
+		delayms(100);
+	}
+	
 	if(err)
 	{
 		mouse_state = E_MOUSE_ERR;
@@ -263,7 +269,7 @@ u8 mouse_init(void)
 	return 0;
 }
 
-u8 mouse_read(u32 addr, void *data, u32 len)
+u8 mouse_read(u32 addr, void *data, u32 arg)
 {
 	s16 x,y;
 	static u8 last_state = 0;
@@ -298,14 +304,14 @@ u8 mouse_read(u32 addr, void *data, u32 len)
 	}
 }
 
-u8 mouse_write(u32 addr, void *data, u32 len)
+u8 mouse_write(u32 addr, void *data, u32 arg)
 {
 	return 0;
 }
 #else
 u8 mouse_init(void){return 0xFF;}
-u8 mouse_read(u32 addr, void *data, u32 len){return 0xFF;}
-u8 mouse_write(u32 addr, void *data, u32 len){return 0xFF;}
+u8 mouse_read(u32 addr, void *data, u32 arg){return 0xFF;}
+u8 mouse_write(u32 addr, void *data, u32 arg){return 0xFF;}
 #endif
 
 

@@ -562,24 +562,24 @@ u8 usb_init(void)
 	return 0;
 }
 
-u8 usb_read(u32 addr, void *data, u32 len)
+u8 usb_read(u32 addr, void *data, u32 arg)
 {
 	return 0;
 }
 
-u8 usb_write(u32 addr, void *data, u32 len)
+u8 usb_write(u32 addr, void *data, u32 arg)
 {
 	if(addr == 1)
 	{
-		Usb_hid_property.send_event(data, len);
+		Usb_hid_property.send_event(data, arg);
 	}
 	return 0;
 }
 
 #else
 u8 usb_init(void){return 0xFF;}
-u8 usb_read(u32 addr, void *data){return 0xFF;}
-u8 usb_write(u32 addr, void *data){return 0xFF;}
+u8 usb_read(u32 addr, void *data, u32 arg){return 0xFF;}
+u8 usb_write(u32 addr, void *data, u32 arg){return 0xFF;}
 #endif
 
 	

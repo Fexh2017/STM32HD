@@ -21,7 +21,7 @@
 
 /*¹¦ÄÜÅäÖÃ==================================================================*/
 #define CONFIG_DEBUG_UART_EN 			CONFIG_DEBUG_LV_H				//DEBUG´®¿Ú
-#define CONFIG_LED_EN					0								//LEDµÆ
+#define CONFIG_LED_EN					1								//LEDµÆ
 #define CONFIG_USB_EN					1								//USB
 #define CONFIG_MOUSE_EN					1								//MOUSE
 
@@ -39,9 +39,9 @@
 
 #define DEBUGN(fmt,...) 	do{printf("%s ",fmt);printf(__VA_ARGS__);}while(0)
 #if CONFIG_DEBUG_TIMESTAMP
-#define DEBUG(fmt,...) 		do{u32 __systime_h = Get_Syshour(); \
-							   u32 __systime_l = Get_Systick(); \
-							   printf("\n%02d:%02d:%02d.%03d %s ", __systime_h, (__systime_l * SYSTICK_US / 60000000), (__systime_l * SYSTICK_US % 60000000 / 1000000), (__systime_l * SYSTICK_US % 1000000 / 1000) ,fmt);printf(__VA_ARGS__);}while(0)
+#define DEBUG(fmt,...) 		do{u32 __systime_h = sys_get_hour(); \
+							   u32 __systime_m = sys_get_ms(); \
+							   printf("\n%02d:%02d:%02d.%03d %s ", __systime_h, (__systime_m / 60000), (__systime_m % 60000 / 1000), (__systime_m % 1000) ,fmt);printf(__VA_ARGS__);}while(0)
 #else
 #define DEBUG(fmt,...) 		do{printf("\n%s ",fmt);printf(__VA_ARGS__);}while(0)
 #endif //CONFIG_DEBUG_TIMESTAMP
