@@ -1,5 +1,5 @@
-#ifndef __P_LED_H__
-#define __P_LED_H__
+#ifndef __LED_H__
+#define __LED_H__
 
 #include "stm32f10x.h"                  // Device header
 #include "device_manager.h"
@@ -7,7 +7,7 @@
 
 #define LED_DEBUG_EN 			CONFIG_DEBUG_LV_M		//LED_DEBUGÊ¹ÄÜ
 
-#define LED_ON	999
+#define LED_ON	256
 #define LED_OFF	0
 
 typedef struct _LED_VALUE{
@@ -26,6 +26,9 @@ typedef enum _LED_SEL{
 
 typedef enum _LED_FUNS{
 	e_LED_FUN_CONSUMER = 0,
+	e_LED_FUN_RED,
+	e_LED_FUN_GREEN,
+	e_LED_FUN_BLUE,
 	e_LED_FUN_RAINBOW,
 }e_LED_FUNS;
 

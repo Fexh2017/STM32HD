@@ -24,6 +24,7 @@
 #define CONFIG_LED_EN					1								//LEDµÆ
 #define CONFIG_USB_EN					1								//USB
 #define CONFIG_MOUSE_EN					1								//MOUSE
+#define CONFIG_FLASH_EN					1								//SPI_FLASH
 
 
 

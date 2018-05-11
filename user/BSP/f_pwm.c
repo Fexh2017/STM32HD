@@ -21,7 +21,7 @@ void f_pwm_init(void)
 	
 	TIM_OCInitStructure.TIM_OCMode = TIM_OCMode_PWM2;
 	TIM_OCInitStructure.TIM_OutputState = TIM_OutputState_Enable;
-	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_Low;
+	TIM_OCInitStructure.TIM_OCPolarity = TIM_OCPolarity_High;
 	
 	if(PWM_CH0)
 	{

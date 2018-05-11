@@ -12,7 +12,7 @@
 #define PWM_CH3 		0	//GPIO_PB_01
 
 #define PWM_PRESCALER	6	// 分频   72M/(x+1)
-#define PWM_PERIOD		999	// 重装   (x+1)
+#define PWM_PERIOD		256	// 重装   (x+1)
 
 void f_pwm_init(void);
 u16 f_pwm_get(u16 ch);

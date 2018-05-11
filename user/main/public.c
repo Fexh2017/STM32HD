@@ -58,7 +58,7 @@ u32 sys_timer_del(u32 id)
 			}
 		}
 	}
-	SYS_ERR("SYS TIMER DEL FAILED");
+	SYS_ERR("SYS TIMER DEL FAILED %d", id);
 	return (u32)-1;
 }
 
@@ -113,6 +113,13 @@ u32 sys_get_ms(void)
 u32 sys_get_hour(void)
 {
 	return Systick_H;
+}
+
+u32 sys_get_time_after(u32 ms)
+{
+	u32 t = sys_get_ms();
+	if(t < ms)return (3000000 + t - ms);
+	else return (t - ms);
 }
 
 //延时毫秒

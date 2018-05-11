@@ -6,15 +6,18 @@
 #include "usb_property.h"
 #include "mouse.h"
 #include "led.h"
+#include "flash.h"
 
 
-
-void sys_led_rainbow(void *p)
+void sys_timer_mouse_read(void *p)
 {
-	Led.write(e_LED_FUN, NULL, e_LED_FUN_RAINBOW);
+	MOUSE_DATA mouse_data;
+	
+	if(Mouse.read(0,&mouse_data, USB_EP1_MAX_PACKET_SIZE) == 1)
+	{
+		Usb.write(1, &mouse_data, USB_EP1_MAX_PACKET_SIZE);
+	}
 }
-
-
 
 
 
@@ -25,21 +28,20 @@ void sys_init(void)
 	Debug.init();
 	SYS_LOG("system init");
 	Led.init();
-	Led.write(e_LED_R,(void*)LED_ON,0);
+	Led.write(e_LED_FUN, NULL, e_LED_FUN_RED);
+	Flash.init();
 	Mouse.init();
 	Usb.init();
 	
-	sys_timer_add(sys_led_rainbow, NULL, 2);
+//	Flash.write(0 , 0, 0);
+//	delayms(2000);
+	
+	Led.write(e_LED_FUN, NULL, e_LED_FUN_RAINBOW);
+	sys_timer_add(sys_timer_mouse_read, NULL, 1);
 }
 
 void sys_mainloop(void)
 {
-	MOUSE_DATA mouse_data;
-	
-	if(Mouse.read(0,&mouse_data, USB_EP1_MAX_PACKET_SIZE) == 1)
-	{
-		Usb.write(1, &mouse_data, USB_EP1_MAX_PACKET_SIZE);
-	}
 }
 
 int main(void)

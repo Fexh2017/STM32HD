@@ -109,14 +109,31 @@ u8 f_spi_rw(u8 data){return 0xFF;}
 
 
 
-void f_spi_cs(u32 pin, u8 state)
+u8 f_spi_cs(u32 pin, u8 state)
 {
+	static u32 cs_state = 0;
 	if(state)
 	{
-		f_gpio_reset(pin);
+		if(cs_state == 0)
+		{
+			f_gpio_reset(pin);
+			cs_state = pin;
+			return 0;
+		}else
+		{
+			return (u8)-1;
+		}
 	}else
 	{
-		f_gpio_set(pin);
+		if(cs_state == pin)
+		{
+			f_gpio_set(pin);
+			cs_state = 0;
+			return 0;
+		}else
+		{
+			return (u8)-1;
+		}
 	}
 }
 
@@ -132,7 +149,7 @@ u8 f_spi_read(u8 addr)
 	u8 data;
 	f_spi_rw(addr);
 	delay(100);
-	data = f_spi_rw(0xff);
+	data = f_spi_rw(0xFF);
 	return data;
 }
 
@@ -153,7 +170,7 @@ u32 f_spi_readbuf(u8 addr, u8* recv_buf, u32 len)
 	f_spi_rw(addr);
 	for(i = 0; i < len; i++)
 	{
-		recv_buf[i] = f_spi_rw(0xff);
+		recv_buf[i] = f_spi_rw(0xFF);
 	}
 	return i;
 }

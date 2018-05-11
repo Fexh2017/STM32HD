@@ -13,10 +13,10 @@
 #define SPI_MOSI 	GPIO_PA_07
 #define SPI_CLK	 	GPIO_PA_05
 #define SPI_DELAY 	0
-#define SPI_BAUD	SPI_BaudRatePrescaler_128	// 72M/x
+#define SPI_BAUD	SPI_BaudRatePrescaler_64	// 72M/x
 
 void f_spi_init(u32 cs);
-void f_spi_cs(u32 pin, u8 state);
+u8 f_spi_cs(u32 pin, u8 state);
 u8 f_spi_rw(u8 data);
 void f_spi_send(u8 addr, u8 data);
 u8 f_spi_read(u8 addr);
